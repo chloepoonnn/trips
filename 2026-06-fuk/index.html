@@ -64,6 +64,10 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
 .ftabs::-webkit-scrollbar{display:none}
 .ftab{flex-shrink:0;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:800;border:2px solid var(--pr);background:var(--wh);color:var(--tx);cursor:pointer;font-family:var(--f);transition:all .18s;white-space:nowrap}
 .ftab.on{background:var(--pr);color:#14405e;border-color:var(--prd)}
+.ftab.day{border-color:var(--ac)}
+.ftab.day.on{background:var(--ac);color:#6b4f0e;border-color:var(--acd)}
+.ftab.want{border-color:#f5b7b1}
+.ftab.want.on{background:var(--ht);color:var(--htd);border-color:#e6a39c}
 .sw{padding:9px 16px 0}
 .si{width:100%;padding:9px 15px;border-radius:16px;border:2px solid var(--pr);background:var(--wh);font-size:13px;font-family:var(--f);font-weight:700;color:var(--tx);outline:none}
 
@@ -86,31 +90,46 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
 .ab.v.on{background:var(--gn);border-color:#6ee7b7;color:var(--gnd)}
 .ab.w.on{background:var(--ht);border-color:#f5b7b1;color:var(--htd)}
 .ab.gm{color:#1f618d;border-color:var(--pr)}
-
-/* ── Mini map per card ── */
-.map-toggle{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;margin-top:8px;padding:6px 10px;border-radius:10px;border:2px solid var(--pr);background:var(--wh);font-size:11px;font-weight:800;font-family:var(--f);cursor:pointer;color:#1f618d;transition:all .18s}
-.map-toggle.open{background:var(--pr);color:#14405e}
-.map-wrap{display:none;margin-top:7px;border-radius:11px;overflow:hidden;border:2px solid #cfe5f2}
-.map-wrap.show{display:block}
-.map-wrap iframe{width:100%;height:160px;border:none;display:block}
+.ab.mp{color:#6b4f0e;border-color:var(--ac)}
 
 /* ── Area map ── */
 .city-map-wrap{position:relative;border-bottom:2.5px solid var(--pr)}
 .city-map-el{width:100%;height:240px}
 .map-legend-row{display:flex;flex-wrap:wrap;gap:5px;padding:7px 14px;background:var(--wh);border-bottom:1.5px solid #e0edf5}
 .mleg{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:800;color:var(--tx)}
-.mleg-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
 .empty{text-align:center;padding:32px 20px;color:var(--mt)}
 .empty .ei{font-size:36px;margin-bottom:8px}
 .empty p{font-size:13px;font-weight:700}
 
+/* ── Full map page ── */
+#map-full{width:100%;height:calc(100vh - 252px);min-height:320px}
+.locbtn{position:absolute;bottom:14px;right:12px;z-index:800;width:42px;height:42px;border-radius:50%;border:2px solid var(--prd);background:var(--wh);font-size:18px;cursor:pointer;box-shadow:var(--sh)}
+.locbtn.on{background:#dbeafe;border-color:#2563eb}
+.map-pos{position:relative}
+
+/* ── Emoji markers ── */
+.emk{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--wh);border:2.5px solid var(--prd);font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.emk.want{border-color:var(--htd);background:#fff0f0}
+.emk.done{opacity:.38;border-color:#b8c4cc;filter:grayscale(1)}
+.emk.mg{border-color:var(--acd);background:#fffbea}
+.emk.mg.want{border-color:var(--htd);background:#fff0f0}
+.rmk{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#1f618d;color:#fff;font-size:13px;font-weight:900;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);font-family:var(--f)}
+
+/* ── Bottom sheet ── */
+.sheet{position:fixed;bottom:0;left:50%;transform:translate(-50%,110%);width:100%;max-width:480px;z-index:1100;transition:transform .22s ease-out;padding:0 8px 64px}
+.sheet.show{transform:translate(-50%,0)}
+.sheet-in{background:var(--wh);border-radius:18px 18px 14px 14px;box-shadow:0 -4px 24px rgba(0,0,0,.22);padding:10px 14px 13px;border:2px solid var(--pr);border-bottom:none}
+.sheet-grab{width:40px;height:4px;border-radius:4px;background:#d4e2ec;margin:0 auto 8px}
+.sheet-x{position:absolute;top:14px;right:22px;width:26px;height:26px;border-radius:50%;border:none;background:var(--bg);font-size:12px;font-weight:900;color:var(--mt);cursor:pointer}
+
 /* ── Itinerary ── */
 .itin{padding:10px 16px}
 .dcard{background:var(--wh);border-radius:var(--r);margin-bottom:11px;box-shadow:var(--sh);overflow:hidden}
-.dhd{padding:12px 14px 10px;border-bottom:1.5px solid #e8f1f7}
+.dhd{padding:12px 14px 10px;border-bottom:1.5px solid #e8f1f7;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .ddate{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.5px}
 .dtheme{font-size:14px;font-weight:900;margin-top:2px}
 .dcity{font-size:10.5px;font-weight:700;color:var(--prd);margin-top:1px}
+.droute{flex-shrink:0;padding:6px 11px;border-radius:12px;border:2px solid var(--ac);background:#fffbea;font-size:10.5px;font-weight:900;color:#6b4f0e;cursor:pointer;font-family:var(--f)}
 .tl{padding:11px 14px;display:flex;flex-direction:column}
 .step{display:flex;gap:9px;padding:6px 0;position:relative}
 .step::before{content:'';position:absolute;left:21px;top:27px;bottom:-6px;width:2px;background:#e0edf5;z-index:0}
@@ -173,6 +192,31 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
   <div class="itin" id="itin-content"></div>
 </div>
 
+<!-- FULL MAP -->
+<div id="page-map" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🗺️ 地圖</span></div>
+  <div class="frow"><div class="ftabs" id="map-cats">
+    <button class="ftab" data-mcat="food">🍣 食肆</button>
+    <button class="ftab" data-mcat="cafe">☕ Cafe</button>
+    <button class="ftab" data-mcat="yatai">🏮 屋台</button>
+    <button class="ftab" data-mcat="shopping">🛍️ 購物</button>
+    <button class="ftab" data-mcat="activity">🎯 景點</button>
+  </div></div>
+  <div class="frow"><div class="ftabs" id="map-days">
+    <button class="ftab want" data-mwant="1">❤️ 想去</button>
+    <button class="ftab want" data-mhide="1">🚫 藏去過</button>
+    <button class="ftab day" data-mday="0">D1 6/16</button>
+    <button class="ftab day" data-mday="1">D2 6/17</button>
+    <button class="ftab day" data-mday="2">D3 6/18</button>
+    <button class="ftab day" data-mday="3">D4 6/19</button>
+    <button class="ftab day" data-mday="4">D5 6/20</button>
+  </div></div>
+  <div class="map-pos">
+    <div id="map-full"></div>
+    <button class="locbtn" id="locbtn">📍</button>
+  </div>
+</div>
+
 <!-- TENJIN -->
 <div id="page-tenjin" class="page">
   <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🏙️ 天神・大名</span></div>
@@ -225,9 +269,17 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
   <div class="lp" id="lug-content"></div>
 </div>
 
+<!-- BOTTOM SHEET（地圖撳 marker 彈出） -->
+<div class="sheet" id="sheet"><div class="sheet-in" style="position:relative">
+  <div class="sheet-grab"></div>
+  <button class="sheet-x" id="sheet-x">✕</button>
+  <div id="sheet-body"></div>
+</div></div>
+
 <nav class="bnav">
   <button class="ntab active" id="nav-home"    data-goto="home">   <span class="ic">🏠</span>首頁</button>
   <button class="ntab"        id="nav-itin"    data-goto="itin">   <span class="ic">📅</span>行程</button>
+  <button class="ntab"        id="nav-map"     data-goto="map">    <span class="ic">🗺️</span>地圖</button>
   <button class="ntab"        id="nav-tenjin"  data-goto="tenjin"> <span class="ic">🏙️</span>天神</button>
   <button class="ntab"        id="nav-hakata"  data-goto="hakata"> <span class="ic">🍜</span>博多</button>
   <button class="ntab"        id="nav-day"     data-goto="day">    <span class="ic">⛩️</span>近郊</button>
@@ -239,7 +291,6 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // DATA  [name, addr, transport, note, tags, subcat, lat, lng]
 // tags: mustgo warn eat igreel  (space-sep)
-// lat/lng = 區域地圖 marker（冇就唔顯示喺大地圖）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const D={
 tenjin:[
@@ -293,37 +344,37 @@ const LUGGAGE={
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ITINERARY（框架 — 確認酒店+想去清單後再填細節）
+// ITINERARY — step 有 geo:[lat,lng] 先會出現喺動線
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const ITIN=[
   {id:'d0616',date:'6/16 (周二)',city:'✈️→🏙️ 香港→福岡',theme:'🛬 抵達・天神初探',steps:[
     {tm:'07:35',tp:'transport',ti:'UO600 起飛',sub:'香港 HKG → 福岡 FUK',bk:true},
-    {tm:'12:00',tp:'transport',ti:'抵達福岡機場',sub:'國際線 → 免費接駁巴士去國內線搭地下鐵（約15分鐘）'},
+    {tm:'12:00',tp:'transport',ti:'抵達福岡機場',sub:'國際線 → 免費接駁巴士去國內線搭地下鐵（約15分鐘）',geo:[33.5859,130.4510]},
     {tm:'13:30',tp:'hotel',ti:'酒店放行李',sub:'📝 酒店未定 — 定咗再填',fx:true},
-    {tm:'下午',tp:'shopping',ti:'天神行街',sub:'天神地下街 / PARCO / 三越',fx:true},
-    {tm:'晚上',tp:'food',ti:'中洲屋台晚餐',sub:'傍晚6點後開檔，拉麵+燒鳥',fx:true},
+    {tm:'下午',tp:'shopping',ti:'天神行街',sub:'天神地下街 / PARCO / 三越',fx:true,geo:[33.5914,130.3989]},
+    {tm:'晚上',tp:'food',ti:'中洲屋台晚餐',sub:'傍晚6點後開檔，拉麵+燒鳥',fx:true,geo:[33.5933,130.4060]},
   ]},
   {id:'d0617',date:'6/17 (周三)',city:'🏙️ 天神・大名',theme:'🍣 ひょうたん寿司・大名掃街',steps:[
-    {tm:'11:20',tp:'food',ti:'ひょうたん寿司 本店',sub:'11:30開店，提早5-10分鐘到排隊！Solaria Plaza北側',bk:true},
-    {tm:'下午',tp:'shopping',ti:'nanamica FUKUOKA',sub:'大名2-1-14｜11:00–19:00｜行8分鐘',fx:true},
-    {tm:'下午',tp:'shopping',ti:'大名・今泉 select shop 掃街',sub:'古著 / 小眾品牌集中地',fx:true},
+    {tm:'11:20',tp:'food',ti:'ひょうたん寿司 本店',sub:'11:30開店，提早5-10分鐘到排隊！Solaria Plaza北側',bk:true,geo:[33.5916,130.3989]},
+    {tm:'下午',tp:'shopping',ti:'nanamica FUKUOKA',sub:'大名2-1-14｜11:00–19:00｜行8分鐘',fx:true,geo:[33.5896,130.3963]},
+    {tm:'下午',tp:'shopping',ti:'大名・今泉 select shop 掃街',sub:'古著 / 小眾品牌集中地',fx:true,geo:[33.5890,130.3970]},
     {tm:'晚上',tp:'food',ti:'晚餐（未定）',sub:'自由選 → 見清單',fx:true},
   ]},
   {id:'d0618',date:'6/18 (周四)',city:'⛩️ 近郊',theme:'⛩️ 太宰府 day trip（候選）',steps:[
-    {tm:'上午',tp:'transport',ti:'西鐵天神 → 太宰府',sub:'約30分鐘｜⚠️ 梅雨季出發前睇天氣',fx:true},
-    {tm:'中午',tp:'activity',ti:'太宰府天満宮 + 參道',sub:'梅枝餅・隈研吾星巴克',fx:true},
+    {tm:'上午',tp:'transport',ti:'西鐵天神 → 太宰府',sub:'約30分鐘｜⚠️ 梅雨季出發前睇天氣',fx:true,geo:[33.5887,130.3996]},
+    {tm:'中午',tp:'activity',ti:'太宰府天満宮 + 參道',sub:'梅枝餅・隈研吾星巴克',fx:true,geo:[33.5211,130.5358]},
     {tm:'下午',tp:'transport',ti:'返福岡市區',sub:'',fx:true},
     {tm:'晚上',tp:'food',ti:'晚餐（未定）',sub:'自由選 → 見清單',fx:true},
   ]},
   {id:'d0619',date:'6/19 (周五)',city:'🍜 博多',theme:'🛍️ 博多・運河城・手信日',steps:[
-    {tm:'上午',tp:'activity',ti:'櫛田神社',sub:'順路打卡',fx:true},
-    {tm:'中午',tp:'shopping',ti:'キャナルシティ博多',sub:'拉麵競技場午餐 + 商場',fx:true},
-    {tm:'下午',tp:'shopping',ti:'博多駅掃手信',sub:'明太子・博多通りもん｜KITTE / 阪急',fx:true},
+    {tm:'上午',tp:'activity',ti:'櫛田神社',sub:'順路打卡',fx:true,geo:[33.5933,130.4108]},
+    {tm:'中午',tp:'shopping',ti:'キャナルシティ博多',sub:'拉麵競技場午餐 + 商場',fx:true,geo:[33.5899,130.4115]},
+    {tm:'下午',tp:'shopping',ti:'博多駅掃手信',sub:'明太子・博多通りもん｜KITTE / 阪急',fx:true,geo:[33.5897,130.4207]},
     {tm:'晚上',tp:'food',ti:'最後晚餐（未定）',sub:'自由選 → 見清單',fx:true},
   ]},
   {id:'d0620',date:'6/20 (周六)',city:'✈️ 福岡→香港',theme:'🛫 回香港（晏晝機）',steps:[
     {tm:'09:30',tp:'hotel',ti:'Check-out',sub:'執好行李，唔好遲'},
-    {tm:'10:30',tp:'transport',ti:'地下鐵去機場',sub:'國內線 → 接駁巴士去國際線，預鬆啲'},
+    {tm:'10:30',tp:'transport',ti:'地下鐵去機場',sub:'國內線 → 接駁巴士去國際線，預鬆啲',geo:[33.5859,130.4510]},
     {tm:'12:55',tp:'transport',ti:'UO601 起飛',sub:'FUK → HKG',bk:true},
     {tm:'15:35',tp:'transport',ti:'抵達香港 HKG',sub:''},
   ]},
@@ -336,13 +387,24 @@ let curPage='home';
 let curCats={tenjin:new Set(),hakata:new Set(),day:new Set()};
 let curQ={tenjin:'',hakata:'',day:''};
 let stepDone={};
+let mapCats=new Set(),mapWant=false,mapHide=false,mapDay=null;
 
 function lsg(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch{return{}}}
 function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 function getV(){return lsg('fukv')}
 function getW(){return lsg('fukw')}
-function togV(n){const s=getV();s[n]=!s[n];lss('fukv',s);renderArea(curPage)}
-function togW(n){const s=getW();s[n]=!s[n];lss('fukw',s);renderArea(curPage)}
+function togV(n){const s=getV();s[n]=!s[n];lss('fukv',s);refreshAfterState(n)}
+function togW(n){const s=getW();s[n]=!s[n];lss('fukw',s);refreshAfterState(n)}
+function refreshAfterState(name){
+  if(D[curPage])renderArea(curPage);
+  refreshMarker(name);
+  if(sheetName===name)openSheet(name,false);
+}
+
+// 所有 spot 攤平 + 反查
+const SPOTS=[];
+Object.entries(D).forEach(([area,items])=>items.forEach(it=>SPOTS.push({area,it})));
+function findSpot(name){return SPOTS.find(s=>s.it[0]===name)}
 
 const TM={mustgo:'<span class="tg mg">⭐ MUST GO</span>',warn:'<span class="tg wn2">⚠️ 注意</span>',eat:'<span class="tg et">👍 必食</span>',igreel:'<span class="tg ig">📱 IG Reel</span>'};
 function mkTags(tags){return (tags||'').split(' ').filter(Boolean).map(x=>TM[x]||'').join('')}
@@ -371,68 +433,177 @@ function filterItems(items,q,cats){
   });
 }
 
-let _ni=0;const NM={};
-function mkCard(it){
-  const[name,addr,tr,note,tags]=it;
+// card HTML（list 同 bottom sheet 共用）
+function cardHTML(it,inSheet){
+  const[name,addr,tr,note,tags,,lat,lng]=it;
   const v=getV()[name],w=getW()[name];
   const tH=mkTags(tags);
   const meta=[];
   if(addr&&addr!=='—'&&!addr.startsWith('— '))meta.push('📍 '+addr);
   if(tr&&tr!=='—')meta.push('🚇 '+tr);
-  const i=_ni++;
-  NM[curPage]=NM[curPage]||{};NM[curPage][i]=name;
-  const noMap=!addr||addr==='—'||addr.startsWith('— ');
-  // 升級位：embed map + 直接開 Google Maps app deep link
+  const hasGeo=lat&&lng;
+  const noNav=!addr||addr==='—'||addr.startsWith('— ');
   const q=encodeURIComponent(name+' 福岡');
-  const mapSrc=noMap?null:`https://maps.google.com/maps?q=${encodeURIComponent(addr+' 福岡')}&output=embed&z=16&hl=zh-TW`;
-  return`<div class="card${v?' vs':''}${w?' wn':''}" data-ci="${i}">
-    ${tH?`<div class="tgs">${tH}</div>`:''}
+  const enc=encodeURIComponent(name);
+  return`${tH?`<div class="tgs">${tH}</div>`:''}
     <div class="cnm">${name}</div>
     ${meta.length?`<div class="cmt">${meta.join('&nbsp;·&nbsp;')}</div>`:''}
     ${note?`<div class="cno">${note}</div>`:''}
     <div class="ca">
-      <button class="ab v${v?' on':''}" data-ac="v" data-ci="${i}">${v?'✅ 去過':'○ 去過'}</button>
-      <button class="ab w${w?' on':''}" data-ac="w" data-ci="${i}">${w?'❤️ 想去':'🤍 想去'}</button>
-      ${noMap?'':`<a class="ab gm" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">🧭 導航</a>`}
-    </div>
-    ${mapSrc?`<button class="map-toggle" data-mt="1">🗺️ 顯示地圖</button><div class="map-wrap"><iframe data-src="${mapSrc}" loading="lazy"></iframe></div>`:''}
-  </div>`;
+      <button class="ab v${v?' on':''}" data-tog="v" data-nm="${enc}">${v?'✅ 去過':'○ 去過'}</button>
+      <button class="ab w${w?' on':''}" data-tog="w" data-nm="${enc}">${w?'❤️ 想去':'🤍 想去'}</button>
+      ${noNav?'':`<a class="ab gm" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">🧭 導航</a>`}
+      ${(hasGeo&&!inSheet)?`<button class="ab mp" data-flyto="${enc}">🗺️ 地圖</button>`:''}
+    </div>`;
 }
 
 function renderArea(area){
   const el=document.getElementById('cards-'+area);if(!el)return;
-  _ni=0;NM[area]={};
   const f=sortItems(filterItems(D[area],curQ[area],curCats[area]));
-  el.innerHTML=f.length?f.map(mkCard).join(''):`<div class="empty"><div class="ei">🔍</div><p>搵唔到...</p></div>`;
+  el.innerHTML=f.length?f.map(it=>{
+    const v=getV()[it[0]],w=getW()[it[0]];
+    return`<div class="card${v?' vs':''}${w?' wn':''}">${cardHTML(it,false)}</div>`;
+  }).join(''):`<div class="empty"><div class="ei">🔍</div><p>搵唔到...</p></div>`;
+  syncAreaMap(area);
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// AREA MAPS (Leaflet)
+// MAPS — CARTO Voyager tiles + emoji markers
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const CAT_COLOR={food:'#e91e63',cafe:'#8e44ad',shopping:'#f39c12',activity:'#27ae60',yatai:'#e74c3c'};
+const CAT_EMOJI={food:'🍣',cafe:'☕',shopping:'🛍️',activity:'🎯',yatai:'🏮'};
 const CAT_LABEL={food:'🍣 食肆',cafe:'☕ Cafe',shopping:'🛍️ 購物',activity:'🎯 景點',yatai:'🏮 屋台'};
-const MAPS={};
-function initMap(area){
-  if(MAPS[area])return;
+function tiles(){return L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO',maxZoom:19})}
+
+function mkIcon(it){
+  const[name,,,,tags,sc]=it;
+  const v=getV()[name],w=getW()[name];
+  let cls='emk';
+  if(isMustgo(it))cls+=' mg';
+  if(w)cls+=' want';
+  if(v)cls+=' done';
+  return L.divIcon({className:'',html:`<div class="${cls}">${CAT_EMOJI[sc]||'📍'}</div>`,iconSize:[30,30],iconAnchor:[15,15]});
+}
+
+// marker registry：name → [marker,...]（full map + area map 各一）
+const MK={};
+function regMarker(name,mk){(MK[name]=MK[name]||[]).push(mk)}
+function refreshMarker(name){
+  const s=findSpot(name);if(!s)return;
+  (MK[name]||[]).forEach(mk=>mk.setIcon(mkIcon(s.it)));
+  applyMapFilter();
+}
+
+// ── Area maps（keep，升級 emoji + filter 聯動）──
+const AREA_MAPS={},AREA_MK={};
+function initAreaMap(area){
+  if(AREA_MAPS[area])return;
   const items=D[area].filter(it=>it[6]&&it[7]);
   if(!items.length)return;
   const m=L.map('map-'+area,{scrollWheelZoom:false});
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(m);
-  const grp=[];
-  const cats=new Set();
+  tiles().addTo(m);
+  AREA_MK[area]={};
+  const grp=[];const cats=new Set();
   items.forEach(it=>{
-    const[name,addr,,,,sc,lat,lng]=it;
-    cats.add(sc);
-    const mk=L.circleMarker([lat,lng],{radius:9,color:'#fff',weight:2,fillColor:CAT_COLOR[sc]||'#3498db',fillOpacity:.95}).addTo(m);
-    mk.bindPopup(`<b>${name}</b><br><small>${addr}</small>`);
-    grp.push([lat,lng]);
+    cats.add(it[5]);
+    const mk=L.marker([it[6],it[7]],{icon:mkIcon(it)}).addTo(m);
+    mk.on('click',()=>openSheet(it[0],true));
+    AREA_MK[area][it[0]]=mk;
+    regMarker(it[0],mk);
+    grp.push([it[6],it[7]]);
   });
-  m.fitBounds(grp,{padding:[28,28],maxZoom:15});
+  m.fitBounds(grp,{padding:[30,30],maxZoom:15});
   const leg=document.getElementById('leg-'+area);
-  if(leg)leg.innerHTML=[...cats].map(c=>`<span class="mleg"><span class="mleg-dot" style="background:${CAT_COLOR[c]||'#3498db'}"></span>${CAT_LABEL[c]||c}</span>`).join('');
-  MAPS[area]=m;
+  if(leg)leg.innerHTML=[...cats].map(c=>`<span class="mleg">${CAT_LABEL[c]||c}</span>`).join('')+'<span class="mleg" style="color:var(--mt)">｜撳 marker 開卡</span>';
+  AREA_MAPS[area]=m;
   setTimeout(()=>m.invalidateSize(),60);
 }
+function syncAreaMap(area){
+  const m=AREA_MAPS[area];if(!m)return;
+  const visible=new Set(filterItems(D[area],curQ[area],curCats[area]).map(it=>it[0]));
+  Object.entries(AREA_MK[area]||{}).forEach(([name,mk])=>{
+    visible.has(name)?mk.addTo(m):m.removeLayer(mk);
+  });
+}
+
+// ── Full map ──
+let FM=null,FM_MK={},routeLayer=null,meDot=null,meRing=null,geoWatch=null;
+const CITY_BOUNDS=[[33.583,130.388],[33.598,130.425]];   // 天神↔博多核心
+function initFullMap(){
+  if(FM){setTimeout(()=>FM.invalidateSize(),60);return;}
+  FM=L.map('map-full',{zoomControl:true});
+  tiles().addTo(FM);
+  SPOTS.forEach(({it})=>{
+    if(!(it[6]&&it[7]))return;
+    const mk=L.marker([it[6],it[7]],{icon:mkIcon(it)}).addTo(FM);
+    mk.on('click',()=>openSheet(it[0],true));
+    FM_MK[it[0]]=mk;
+    regMarker(it[0],mk);
+  });
+  FM.fitBounds(CITY_BOUNDS,{padding:[10,10]});
+  setTimeout(()=>FM.invalidateSize(),60);
+}
+function applyMapFilter(){
+  if(!FM)return;
+  const v=getV(),w=getW();
+  Object.entries(FM_MK).forEach(([name,mk])=>{
+    const s=findSpot(name);if(!s)return;
+    const sc=s.it[5];
+    let show=true;
+    if(mapCats.size>0&&!mapCats.has(sc))show=false;
+    if(mapWant&&!w[name])show=false;
+    if(mapHide&&v[name])show=false;
+    show?mk.addTo(FM):FM.removeLayer(mk);
+  });
+}
+function showRoute(dayIdx){
+  if(routeLayer){FM.removeLayer(routeLayer);routeLayer=null;}
+  document.querySelectorAll('#map-days .ftab[data-mday]').forEach(b=>b.classList.toggle('on',+b.dataset.mday===dayIdx&&mapDay!==null));
+  if(dayIdx===null||mapDay===null)return;
+  const pts=ITIN[dayIdx].steps.filter(s=>s.geo).map((s,i)=>({geo:s.geo,ti:s.ti,n:i+1}));
+  if(!pts.length)return;
+  const lg=L.layerGroup();
+  L.polyline(pts.map(p=>p.geo),{color:'#1f618d',weight:3.5,dashArray:'7 7',opacity:.85}).addTo(lg);
+  pts.forEach(p=>{
+    L.marker(p.geo,{icon:L.divIcon({className:'',html:`<div class="rmk">${p.n}</div>`,iconSize:[26,26],iconAnchor:[13,13]}),zIndexOffset:1000})
+     .bindPopup(`<b>${p.n}. ${p.ti}</b>`).addTo(lg);
+  });
+  lg.addTo(FM);routeLayer=lg;
+  FM.fitBounds(pts.map(p=>p.geo),{padding:[44,44],maxZoom:15});
+}
+function toggleLocate(){
+  const btn=document.getElementById('locbtn');
+  if(geoWatch!==null){
+    navigator.geolocation.clearWatch(geoWatch);geoWatch=null;
+    if(meDot){FM.removeLayer(meDot);meDot=null;}
+    if(meRing){FM.removeLayer(meRing);meRing=null;}
+    btn.classList.remove('on');return;
+  }
+  if(!navigator.geolocation){alert('裝置唔支援定位');return;}
+  btn.classList.add('on');
+  let first=true;
+  geoWatch=navigator.geolocation.watchPosition(p=>{
+    const ll=[p.coords.latitude,p.coords.longitude];
+    if(!meDot){
+      meDot=L.circleMarker(ll,{radius:8,color:'#fff',weight:2.5,fillColor:'#2563eb',fillOpacity:1}).addTo(FM);
+      meRing=L.circle(ll,{radius:p.coords.accuracy,color:'#2563eb',weight:1,fillColor:'#2563eb',fillOpacity:.12}).addTo(FM);
+    }else{meDot.setLatLng(ll);meRing.setLatLng(ll);meRing.setRadius(p.coords.accuracy);}
+    if(first){FM.setView(ll,15);first=false;}
+  },e=>{
+    btn.classList.remove('on');geoWatch=null;
+    alert('攞唔到位置：'+(e.code===1?'未授權定位':'訊號弱'));
+  },{enableHighAccuracy:true,maximumAge:5000});
+}
+
+// ── Bottom sheet ──
+let sheetName=null;
+function openSheet(name,fly){
+  const s=findSpot(name);if(!s)return;
+  sheetName=name;
+  document.getElementById('sheet-body').innerHTML=cardHTML(s.it,true);
+  document.getElementById('sheet').classList.add('show');
+  if(fly===true&&FM&&curPage==='map'&&s.it[6])FM.panTo([s.it[6],s.it[7]]);
+}
+function closeSheet(){sheetName=null;document.getElementById('sheet').classList.remove('show')}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ITINERARY render
@@ -441,8 +612,9 @@ const SI={transport:'✈️',food:'🍣',activity:'🎯',hotel:'🏨',shopping:'
 function renderItin(){
   const el=document.getElementById('itin-content');if(!el)return;
   stepDone=lsg('fukstep');
-  el.innerHTML=ITIN.map(d=>`<div class="dcard">
-    <div class="dhd"><div class="ddate">${d.date}</div><div class="dtheme">${d.theme}</div><div class="dcity">${d.city}</div></div>
+  el.innerHTML=ITIN.map((d,di)=>`<div class="dcard">
+    <div class="dhd"><div><div class="ddate">${d.date}</div><div class="dtheme">${d.theme}</div><div class="dcity">${d.city}</div></div>
+    ${d.steps.some(s=>s.geo)?`<button class="droute" data-route="${di}">🗺️ 動線</button>`:''}</div>
     <div class="tl">${d.steps.map((s,i)=>{
       const k=d.id+'_'+i,done=stepDone[k];
       return`<div class="step${done?' done':''}">
@@ -475,38 +647,68 @@ function renderLug(){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function goto(p){
   curPage=p;
+  closeSheet();
   document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
   const pg=document.getElementById('page-'+p);if(pg)pg.classList.add('active');
   document.querySelectorAll('.ntab').forEach(e=>e.classList.remove('active'));
   const nt=document.getElementById('nav-'+p);if(nt)nt.classList.add('active');
   window.scrollTo(0,0);
-  if(D[p]){renderArea(p);initMap(p);}
+  if(D[p]){renderArea(p);initAreaMap(p);}
+  if(p==='map'){initFullMap();applyMapFilter();}
   if(p==='itin')renderItin();
   if(p==='luggage')renderLug();
 }
 
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-goto]');if(g){goto(g.dataset.goto);return;}
-  const ft=e.target.closest('.ftab');
+  // area filter
+  const ft=e.target.closest('.ftab[data-area]');
   if(ft){
     const a=ft.dataset.area,c=ft.dataset.cat,s=curCats[a];
-    s.has(c)?s.delete(c):(s.clear(),s.add(c));   // 單選 toggle，再撳取消
+    s.has(c)?s.delete(c):(s.clear(),s.add(c));
     document.querySelectorAll(`#tabs-${a} .ftab`).forEach(b=>b.classList.toggle('on',s.has(b.dataset.cat)));
     renderArea(a);return;
   }
-  const ab=e.target.closest('.ab[data-ac]');
-  if(ab){
-    const name=NM[curPage][ab.dataset.ci];
-    ab.dataset.ac==='v'?togV(name):togW(name);return;
+  // full-map cat filter（multi-select）
+  const mc=e.target.closest('.ftab[data-mcat]');
+  if(mc){
+    const c=mc.dataset.mcat;
+    mapCats.has(c)?mapCats.delete(c):mapCats.add(c);
+    mc.classList.toggle('on',mapCats.has(c));
+    applyMapFilter();return;
   }
-  const mt=e.target.closest('.map-toggle');
-  if(mt){
-    const w=mt.nextElementSibling,f=w.querySelector('iframe');
-    if(f.dataset.src&&!f.src)f.src=f.dataset.src;   // lazy load embed
-    const open=w.classList.toggle('show');
-    mt.classList.toggle('open',open);
-    mt.textContent=open?'🗺️ 收起地圖':'🗺️ 顯示地圖';return;
+  // full-map want / hide-done
+  const mw=e.target.closest('.ftab[data-mwant]');
+  if(mw){mapWant=!mapWant;mw.classList.toggle('on',mapWant);applyMapFilter();return;}
+  const mh=e.target.closest('.ftab[data-mhide]');
+  if(mh){mapHide=!mapHide;mh.classList.toggle('on',mapHide);applyMapFilter();return;}
+  // full-map day route
+  const md=e.target.closest('.ftab[data-mday]');
+  if(md){
+    const d=+md.dataset.mday;
+    mapDay=(mapDay===d)?null:d;
+    showRoute(mapDay===null?null:d);return;
   }
+  // itinerary 動線 button → 跳地圖開該日 route
+  const dr=e.target.closest('.droute');
+  if(dr){goto('map');mapDay=+dr.dataset.route;showRoute(mapDay);return;}
+  // 去過 / 想去（list + sheet 共用）
+  const tg=e.target.closest('[data-tog]');
+  if(tg){
+    const name=decodeURIComponent(tg.dataset.nm);
+    tg.dataset.tog==='v'?togV(name):togW(name);return;
+  }
+  // card → 地圖 fly
+  const fy=e.target.closest('[data-flyto]');
+  if(fy){
+    const name=decodeURIComponent(fy.dataset.flyto);
+    const s=findSpot(name);
+    goto('map');
+    if(s&&s.it[6]){FM.setView([s.it[6],s.it[7]],16);openSheet(name,false);}
+    return;
+  }
+  if(e.target.closest('#sheet-x')){closeSheet();return;}
+  if(e.target.closest('#locbtn')){toggleLocate();return;}
   const ch=e.target.closest('.ch[data-lug]');
   if(ch){
     const ck=lsg('fuklug');const k=ch.dataset.lug;ck[k]=!ck[k];lss('fuklug',ck);renderLug();return;

@@ -64,9 +64,11 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
 .pt{font-size:15px;font-weight:900}
 
 /* ── Filter / search ── */
-.frow{background:var(--wh);user-select:none}
+.frow{background:var(--wh);user-select:none;position:relative}
 .frow:last-of-type{border-bottom:1.5px solid #e0edf5}
-.ftabs{display:flex;flex-wrap:wrap;gap:7px;padding:9px 14px}
+.frow::after{content:'';position:absolute;right:0;top:0;bottom:0;width:26px;background:linear-gradient(90deg,rgba(255,255,255,0),var(--wh));pointer-events:none}
+.ftabs{display:flex;gap:7px;padding:9px 26px 9px 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain}
+.ftabs::-webkit-scrollbar{display:none}
 .ftab{flex-shrink:0;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:800;border:2px solid var(--pr);background:var(--wh);color:var(--tx);cursor:pointer;font-family:var(--f);transition:all .18s;white-space:nowrap}
 .ftab.on{background:var(--pr);color:#14405e;border-color:var(--prd)}
 .ftab.day{border-color:var(--ac)}

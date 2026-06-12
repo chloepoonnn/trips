@@ -66,8 +66,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
 /* ── Filter / search ── */
 .frow{background:var(--wh);user-select:none}
 .frow:last-of-type{border-bottom:1.5px solid #e0edf5}
-.ftabs{display:flex;gap:7px;padding:9px 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.ftabs::-webkit-scrollbar{display:none}
+.ftabs{display:flex;flex-wrap:wrap;gap:7px;padding:9px 14px}
 .ftab{flex-shrink:0;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:800;border:2px solid var(--pr);background:var(--wh);color:var(--tx);cursor:pointer;font-family:var(--f);transition:all .18s;white-space:nowrap}
 .ftab.on{background:var(--pr);color:#14405e;border-color:var(--prd)}
 .ftab.day{border-color:var(--ac)}
@@ -107,11 +106,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
 .empty .ei{font-size:36px;margin-bottom:8px}
 .empty p{font-size:13px;font-weight:700}
 
-/* ── Full map page ── */
-#map-full{width:100%;height:calc(100vh - 252px);min-height:320px}
+/* ── Full map page（flex 填滿剩低高度，bar wrap 幾多行都唔怕） ── */
+#page-map.active{display:flex;flex-direction:column;height:calc(100vh - 58px);height:calc(100dvh - 58px)}
+.map-pos{position:relative;flex:1;min-height:240px}
+#map-full{position:absolute;inset:0}
 .locbtn{position:absolute;bottom:14px;right:12px;z-index:800;width:42px;height:42px;border-radius:50%;border:2px solid var(--prd);background:var(--wh);font-size:18px;cursor:pointer;box-shadow:var(--sh)}
 .locbtn.on{background:#dbeafe;border-color:#2563eb}
-.map-pos{position:relative}
 
 /* ── Emoji markers ── */
 .emk{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--wh);border:2.5px solid var(--prd);font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
@@ -573,7 +573,8 @@ function syncAreaMap(area){
 
 // ── Full map ──
 let FM=null,FM_MK={},routeLayer=null,meDot=null,meRing=null,geoWatch=null;
-const CITY_BOUNDS=[[33.583,130.388],[33.598,130.425]];   // 天神↔博多核心
+// 市區 marker（唔計近郊）+ 酒店 → 初始視野
+function cityPts(){return SPOTS.filter(s=>s.area!=='day'&&s.it[6]).map(s=>[s.it[6],s.it[7]]).concat([[33.5903,130.3973]])}
 function initFullMap(){
   if(FM){setTimeout(()=>FM.invalidateSize(),60);return;}
   FM=L.map('map-full',{zoomControl:true});
@@ -589,8 +590,9 @@ function initFullMap(){
   L.marker([33.5903,130.3973],{icon:L.divIcon({className:'',html:'<div class="emk htl">🏨</div>',iconSize:[30,30],iconAnchor:[15,15]}),zIndexOffset:500})
    .bindPopup('<b>Richmond Hotel 天神西通</b><br><small>天神2-6-16｜天神站西6出口行3分鐘</small><br><a href="https://www.google.com/maps/search/?api=1&query=%E3%83%AA%E3%83%83%E3%83%81%E3%83%A2%E3%83%B3%E3%83%89%E3%83%9B%E3%83%86%E3%83%AB%E5%A4%A9%E7%A5%9E%E8%A5%BF%E9%80%9A" target="_blank">🧭 導航</a>')
    .addTo(FM);
-  FM.fitBounds(CITY_BOUNDS,{padding:[10,10]});
-  setTimeout(()=>FM.invalidateSize(),60);
+  FM.fitBounds(cityPts(),{padding:[26,26],maxZoom:15});
+  // flex layout 下 container size 要等 layout 完先準，invalidate 完再 fit 一次
+  setTimeout(()=>{FM.invalidateSize();if(mapDay===null)FM.fitBounds(cityPts(),{padding:[26,26],maxZoom:15});},120);
 }
 function applyMapFilter(){
   if(!FM)return;

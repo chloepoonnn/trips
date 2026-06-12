@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>🎂 MM 台灣生日旅行 4/30–5/5</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pk:#F2C4CE;--pkd:#d9899a;--pkbg:#fce8ed;
+  --bl:#B8D8E8;--bld:#7fb8d4;
+  --bg:#FDF0F3;--wh:#fff;
+  --tx:#3a2a2f;--mt:#9a7878;
+  --gn:#d1fae5;--gnd:#059669;
+  --ht:#fce7f3;--htd:#be185d;
+  --sh:0 2px 14px rgba(200,100,130,.13);
+  --r:16px;--f:'Nunito',sans-serif;
+}
+body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;margin:0 auto;padding-bottom:72px;min-height:100vh;-webkit-tap-highlight-color:transparent}
+.page{display:none}.page.active{display:block}
+
+/* ── Nav ── */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--wh);border-top:2px solid var(--pk);display:flex;z-index:100;box-shadow:0 -3px 16px rgba(200,100,130,.1)}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 0 8px;cursor:pointer;font-size:8px;font-weight:800;color:var(--mt);gap:1px;border:none;background:none;font-family:var(--f);transition:color .18s}
+.ntab .ic{font-size:16px;line-height:1}
+.ntab.active{color:#b03060}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(135deg,var(--pk) 0%,var(--bl) 100%);padding:28px 20px 20px;text-align:center;position:relative;overflow:hidden}
+.hero::after{content:'🌸🎂✈️';position:absolute;font-size:80px;opacity:.07;bottom:-12px;right:-8px;letter-spacing:-10px;pointer-events:none}
+.hero h1{font-size:20px;font-weight:900;color:#7a2040;line-height:1.35}
+.hero p{font-size:12px;color:#9a5060;margin-top:5px;font-weight:700}
+
+/* ── Info card ── */
+.ic2{background:var(--wh);border-radius:var(--r);padding:13px 15px;margin:11px 16px 0;box-shadow:var(--sh)}
+.ic2 h3{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.ir{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f8e8ec}
+.ir:last-child{border:none}
+.ir .lb{font-size:11px;color:var(--mt);font-weight:700;flex-shrink:0;padding-right:8px;line-height:1.5}
+.ir .vl{font-size:11px;font-weight:800;color:var(--tx);text-align:right;line-height:1.4}
+.ir .vl small{font-weight:600;color:var(--mt);display:block;font-size:10px}
+
+/* ── City grid ── */
+.cgd{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:11px 16px 14px}
+.cc{background:var(--wh);border-radius:var(--r);padding:18px 12px;text-align:center;cursor:pointer;box-shadow:var(--sh);transition:transform .15s;border:2.5px solid transparent}
+.cc:active{transform:scale(.95)}
+.cc .ce{font-size:30px;display:block;margin-bottom:6px}
+.cc .cn{font-size:13px;font-weight:900}
+.cc .cd{font-size:10px;color:var(--mt);margin-top:2px;font-weight:700}
+.cc.tn{border-color:var(--pk)}.cc.tp{border-color:var(--bl)}.cc.ty{border-color:#b8e8c8}.cc.lg{border-color:#d8b8e8}
+
+/* ── Page head ── */
+.ph{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--wh);border-bottom:1.5px solid #f5e0e8;position:sticky;top:0;z-index:50}
+.bk{background:var(--bg);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;flex-shrink:0}
+.pt{font-size:15px;font-weight:900}
+
+/* ── Confirmed banner ── */
+.conf{background:linear-gradient(135deg,#fce4ec,#e8f4fd);margin:11px 16px 0;border-radius:var(--r);padding:12px;border:2px solid var(--pk)}
+.conf h3{font-size:11px;font-weight:900;color:#b03060;margin-bottom:9px}
+.ci{display:flex;gap:8px;padding:6px 0;border-bottom:1px dashed #f0b8c8;align-items:flex-start}
+.ci:last-child{border:none;padding-bottom:0}
+.ct{font-size:10px;font-weight:800;color:#2a6080;background:var(--bl);padding:2px 7px;border-radius:14px;flex-shrink:0;margin-top:2px;white-space:nowrap}
+.ci .cn2{font-size:12px;font-weight:800;line-height:1.3}
+.ci .cn3{font-size:10px;color:var(--mt);margin-top:2px;font-weight:600}
+
+/* ── Filter bar ── */
+.frow{background:var(--wh);user-select:none}
+.frow+.frow{border-top:1px solid #f5e0e8}
+.frow:last-of-type{border-bottom:1.5px solid #f5e0e8}
+.ftabs{display:flex;gap:7px;padding:9px 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab}
+.ftabs::-webkit-scrollbar{display:none}
+.ftabs.dg{cursor:grabbing}
+.ftab{flex-shrink:0;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:800;border:2px solid var(--pk);background:var(--wh);color:var(--tx);cursor:pointer;font-family:var(--f);transition:all .18s;white-space:nowrap}
+.ftab.on{background:var(--pk);color:#7a2040;border-color:var(--pkd)}
+.ftab.dist{border-color:var(--bl)}
+.ftab.dist.on{background:var(--bl);color:#1a5060;border-color:var(--bld)}
+
+/* ── Search ── */
+.sw{padding:9px 16px 0}
+.si{width:100%;padding:9px 15px;border-radius:16px;border:2px solid var(--bl);background:var(--wh);font-size:13px;font-family:var(--f);font-weight:700;color:var(--tx);outline:none}
+
+/* ── Cards ── */
+.cw{padding:10px 16px;display:flex;flex-direction:column;gap:9px}
+.card{background:var(--wh);border-radius:var(--r);padding:12px 13px 11px;box-shadow:var(--sh);transition:opacity .2s,transform .2s}
+.card.vs{opacity:.4;transform:scale(.982)}
+.card.wn{border-left:4px solid var(--htd)}
+.tgs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.tg{font-size:9.5px;font-weight:900;padding:2px 8px;border-radius:8px}
+.tg.mg{background:#fef9c3;color:#78350f}
+.tg.bd{background:#fce7f3;color:#9d174d}
+.tg.wn2{background:#fee2e2;color:#991b1b}
+.tg.et{background:#dcfce7;color:#14532d}
+.tg.dt{background:#e0f2fe;color:#0369a1;font-size:9px}
+.cnm{font-size:14px;font-weight:900;line-height:1.3}
+.cmt{font-size:10.5px;color:var(--mt);margin-top:3px;font-weight:700;line-height:1.5}
+.cno{font-size:11px;color:#6a4a50;margin-top:4px;font-weight:700;line-height:1.4}
+.ca{display:flex;gap:7px;margin-top:10px}
+.ab{flex:1;padding:7px 4px;border-radius:10px;border:2px solid #f0dde2;background:var(--wh);font-size:11px;font-weight:900;font-family:var(--f);cursor:pointer;color:var(--mt);transition:all .18s}
+.ab.v{border-color:#d1fae5}.ab.v.on{background:var(--gn);border-color:#6ee7b7;color:var(--gnd)}
+.ab.w{border-color:#fce7f3}.ab.w.on{background:var(--ht);border-color:#f9a8d4;color:var(--htd)}
+
+/* ── Mini Map (per card) ── */
+.map-toggle{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;margin-top:8px;padding:6px 10px;border-radius:10px;border:2px solid var(--bl);background:var(--wh);font-size:11px;font-weight:800;font-family:var(--f);cursor:pointer;color:#2a6080;transition:all .18s}
+.map-toggle.open{background:var(--bl);color:#1a4060;border-color:var(--bld)}
+.map-wrap{display:none;margin-top:7px;border-radius:11px;overflow:hidden;border:2px solid #d0e8f4}
+.map-wrap.show{display:block}
+.map-wrap iframe{width:100%;height:160px;border:none;display:block}
+
+/* ── Main City Map ── */
+.city-map-wrap{position:relative;border-bottom:2.5px solid var(--pk)}
+.city-map-el{width:100%;height:240px}
+.map-legend-row{display:flex;flex-wrap:wrap;gap:5px;padding:7px 14px;background:var(--wh);border-bottom:1.5px solid #f5e0e8}
+.mleg{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:800;color:var(--tx)}
+.mleg-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+
+/* ── Night market ── */
+.mks{margin-bottom:4px}
+.mkt{font-size:11px;font-weight:900;color:#b03060;background:var(--pkbg);padding:5px 12px;border-radius:16px;margin:9px 0 6px;display:inline-block;border:1.5px solid var(--pk)}
+.empty{text-align:center;padding:32px 20px;color:var(--mt)}
+.empty .ei{font-size:36px;margin-bottom:8px}
+.empty p{font-size:13px;font-weight:700}
+
+/* ── Luggage ── */
+.lp{padding:11px 16px 0}
+.lpr{background:var(--wh);border-radius:var(--r);padding:12px;margin-bottom:11px;box-shadow:var(--sh)}
+.lpr h3{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.pb{background:#f5e0e8;border-radius:16px;height:9px;overflow:hidden}
+.pf{background:linear-gradient(90deg,var(--pkd),#b03060);height:100%;border-radius:16px;transition:width .4s}
+.px{font-size:10px;font-weight:900;color:#b03060;margin-top:4px;text-align:right}
+.lsc{background:var(--wh);border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:var(--sh)}
+.lsc h3{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ch{display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:10px;border:2px solid #f5e0e8;background:var(--bg);cursor:pointer;transition:all .2s}
+.ch.ck{background:var(--gn);border-color:#6ee7b7}
+.ch input{width:15px;height:15px;accent-color:var(--gnd);cursor:pointer;flex-shrink:0}
+.ch label{font-size:11px;font-weight:700;cursor:pointer;line-height:1.3;color:var(--tx)}
+.ch.ck label{color:var(--gnd)}
+
+/* ── Itinerary ── */
+.itin{padding:10px 16px}
+.dcard{background:var(--wh);border-radius:var(--r);margin-bottom:11px;box-shadow:var(--sh);overflow:hidden}
+.dhd{padding:12px 14px 10px;border-bottom:1.5px solid #f8e8ec}
+.ddate{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.5px}
+.dtheme{font-size:14px;font-weight:900;margin-top:2px}
+.dcity{font-size:10.5px;font-weight:700;color:var(--pkd);margin-top:1px}
+.brq{display:flex;align-items:center;gap:8px;margin:9px 14px;padding:9px 11px;background:var(--pkbg);border-radius:11px;border:1.5px solid var(--pk)}
+.brq p{font-size:11px;font-weight:800;color:#7a2040;flex:1}
+.brtog{display:flex;gap:5px}
+.brbtn{padding:5px 11px;border-radius:12px;font-size:10.5px;font-weight:900;border:2px solid var(--pk);background:var(--wh);cursor:pointer;font-family:var(--f);color:var(--tx);transition:all .18s}
+.brbtn.on{background:#b03060;color:#fff;border-color:#8b1040}
+.tl{padding:11px 14px;display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:9px;padding:6px 0;position:relative}
+.step::before{content:'';position:absolute;left:21px;top:27px;bottom:-6px;width:2px;background:#f5e0e8;z-index:0}
+.step:last-child::before{display:none}
+.sico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;z-index:1;border:2px solid var(--bg)}
+.sico.transport{background:#dbeafe}.sico.food{background:#fce7f3}.sico.activity{background:#f3e8ff}.sico.hotel{background:#d1fae5}.sico.shopping{background:var(--pkbg)}
+.sinfo{flex:1;padding-top:4px}
+.stime{font-size:9.5px;font-weight:900;color:var(--mt);margin-bottom:1px}
+.stitle{font-size:12.5px;font-weight:900;line-height:1.3}
+.ssub{font-size:10.5px;color:var(--mt);font-weight:600;margin-top:2px;line-height:1.4}
+.sbk{font-size:9.5px;font-weight:900;color:#fff;background:#b03060;padding:2px 7px;border-radius:7px;display:inline-block;margin-top:3px}
+.sfx{font-size:9.5px;font-weight:700;color:var(--bld);display:inline-block;margin-top:2px}
+.step.done .stitle{text-decoration:line-through;color:var(--mt)}
+.step-cb{width:17px;height:17px;accent-color:#b03060;cursor:pointer;flex-shrink:0;margin-top:7px}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="hero"><h1>🎂 MM 生日旅行<br>4/30 – 5/5</h1><p>台南 → 台北 → 桃園 ✈️</p></div>
+  <div class="ic2"><h3>✈️ 航班</h3>
+    <div class="ir"><span class="lb">去程 4/30</span><span class="vl">UO130 · 08:00 → 09:30<small>HKG → KHH（高雄）</small></span></div>
+    <div class="ir"><span class="lb">回程 5/5</span><span class="vl">UO117 · 21:25 → 23:20<small>TPE → HKG（桃園）</small></span></div>
+  </div>
+  <div class="ic2" style="margin-top:9px"><h3>🏨 住宿</h3>
+    <div class="ir"><span class="lb">4/30–5/2 台南</span><span class="vl">三道門建築文創旅店<small>中西區成功路77號</small></span></div>
+    <div class="ir"><span class="lb">5/2–5/4 台北</span><span class="vl">路徒Plus行旅 主題館<small>忠孝西路一段80號</small></span></div>
+    <div class="ir"><span class="lb">5/4–5/5 桃園</span><span class="vl">Hotel Cozzi Blu 和逸<small>春德路101號 · 機捷 A18</small></span></div>
+  </div>
+  <div class="cgd">
+    <div class="cc tn" data-goto="tainan"><span class="ce">🏯</span><div class="cn">台南</div><div class="cd">4/30 – 5/2</div></div>
+    <div class="cc tp" data-goto="taipei"><span class="ce">🗼</span><div class="cn">台北</div><div class="cd">5/2 – 5/4</div></div>
+    <div class="cc ty" data-goto="taoyuan"><span class="ce">🌳</span><div class="cn">桃園</div><div class="cd">5/4 – 5/5</div></div>
+    <div class="cc lg" data-goto="luggage"><span class="ce">🎒</span><div class="cn">行李清單</div><div class="cd">MM Checklist</div></div>
+  </div>
+</div>
+
+<!-- ITINERARY -->
+<div id="page-itin" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">📅 行程</span></div>
+  <div class="itin" id="itin-content"></div>
+</div>
+
+<!-- TAINAN -->
+<div id="page-tainan" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🏯 台南</span></div>
+  <div class="city-map-wrap"><div id="map-tainan" class="city-map-el"></div></div>
+  <div class="map-legend-row" id="leg-tainan"></div>
+  <div class="frow"><div class="ftabs" id="tabs-tainan">
+    <button class="ftab" data-cat="mustgo" data-city="tainan">⭐ MUST GO</button>
+    <button class="ftab" data-cat="food" data-city="tainan">🍜 食肆</button>
+    <button class="ftab" data-cat="drinks" data-city="tainan">🧋 飲品</button>
+    <button class="ftab" data-cat="dessert" data-city="tainan">🍧 甜品</button>
+    <button class="ftab" data-cat="eatgo" data-city="tainan">🥡 Eat &amp; Go</button>
+    <button class="ftab" data-cat="shopping" data-city="tainan">🛍️ 購物</button>
+    <button class="ftab" data-cat="activity" data-city="tainan">🎯 體驗</button>
+    <button class="ftab" data-cat="bars" data-city="tainan">🍸 酒吧</button>
+  </div></div>
+  <div class="sw"><input class="si" id="si-tainan" placeholder="🔍 搜尋台南..."></div>
+  <div class="cw" id="cards-tainan"></div>
+</div>
+
+<!-- TAIPEI -->
+<div id="page-taipei" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🗼 台北</span></div>
+  <div class="city-map-wrap"><div id="map-taipei" class="city-map-el"></div></div>
+  <div class="map-legend-row" id="leg-taipei"></div>
+  <div class="conf">
+    <h3>📌 已確認預訂 — 5月3日（日）</h3>
+    <div class="ci"><span class="ct">下午</span><div><div class="cn2">mizuiro_tw 水色洋菓房</div><div class="cn3">🎂 拎生日蛋糕，建議14:00前去</div></div></div>
+    <div class="ci"><span class="ct">17:30</span><div><div class="cn2">CAME perfume 調香體驗（忠孝店）</div><div class="cn3">已訂，需時 90 分鐘</div></div></div>
+    <div class="ci"><span class="ct">19:30</span><div><div class="cn2">🎂 阪前鐵板燒（SOGO忠孝店）</div><div class="cn3">已訂 2位，生日晚餐</div></div></div>
+  </div>
+  <div class="frow"><div class="ftabs" id="tabs-taipei">
+    <button class="ftab" data-cat="mustgo" data-city="taipei">⭐ MUST GO</button>
+    <button class="ftab" data-cat="dinner" data-city="taipei">🍾 晚餐</button>
+    <button class="ftab" data-cat="cafe" data-city="taipei">☕ Cafe</button>
+    <button class="ftab" data-cat="dessert" data-city="taipei">🍮 甜品</button>
+    <button class="ftab" data-cat="eatgo" data-city="taipei">🥡 Eat &amp; Go</button>
+    <button class="ftab" data-cat="bars" data-city="taipei">🍸 酒吧</button>
+    <button class="ftab" data-cat="shopping" data-city="taipei">🛍️ 購物</button>
+    <button class="ftab" data-cat="nightmarket" data-city="taipei" data-solo="1">🏮 夜市</button>
+  </div></div>
+  <div class="frow"><div class="ftabs" id="dist-taipei">
+    <button class="ftab dist" data-dist="中山">中山</button>
+    <button class="ftab dist" data-dist="大安">大安</button>
+    <button class="ftab dist" data-dist="東區">東區</button>
+    <button class="ftab dist" data-dist="信義">信義</button>
+    <button class="ftab dist" data-dist="松山">松山</button>
+    <button class="ftab dist" data-dist="萬華">萬華</button>
+    <button class="ftab dist" data-dist="中正">中正</button>
+    <button class="ftab dist" data-dist="士林">士林</button>
+  </div></div>
+  <div class="sw"><input class="si" id="si-taipei" placeholder="🔍 搜尋台北..."></div>
+  <div class="cw" id="cards-taipei"></div>
+</div>
+
+<!-- TAOYUAN -->
+<div id="page-taoyuan" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🌳 桃園</span></div>
+  <div class="city-map-wrap"><div id="map-taoyuan" class="city-map-el"></div></div>
+  <div class="map-legend-row" id="leg-taoyuan"></div>
+  <div class="frow"><div class="ftabs" id="tabs-taoyuan">
+    <button class="ftab" data-cat="mustgo" data-city="taoyuan">⭐ MUST GO</button>
+    <button class="ftab" data-cat="food" data-city="taoyuan">🍜 食肆</button>
+    <button class="ftab" data-cat="activity" data-city="taoyuan">🎯 體驗</button>
+    <button class="ftab" data-cat="shopping" data-city="taoyuan">🛍️ 購物</button>
+  </div></div>
+  <div class="sw"><input class="si" id="si-taoyuan" placeholder="🔍 搜尋桃園..."></div>
+  <div class="cw" id="cards-taoyuan"></div>
+</div>
+
+<!-- LUGGAGE -->
+<div id="page-luggage" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🎒 行李 Checklist</span></div>
+  <div class="lp" id="lug-content"></div>
+</div>
+
+<nav class="bnav">
+  <button class="ntab active" id="nav-home"    data-goto="home">    <span class="ic">🏠</span>首頁</button>
+  <button class="ntab"        id="nav-itin"    data-goto="itin">    <span class="ic">📅</span>行程</button>
+  <button class="ntab"        id="nav-tainan"  data-goto="tainan">  <span class="ic">🏯</span>台南</button>
+  <button class="ntab"        id="nav-taipei"  data-goto="taipei">  <span class="ic">🗼</span>台北</button>
+  <button class="ntab"        id="nav-taoyuan" data-goto="taoyuan"> <span class="ic">🌳</span>桃園</button>
+  <button class="ntab"        id="nav-luggage" data-goto="luggage"> <span class="ic">🎒</span>行李</button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DATA  [name, addr, transport, note, tags, subcat, district]
+// tags: mustgo bday warn eat  (space-sep)
+// subcat: for tainan/taoyuan category filtering
+// district: for taipei district filter
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const D={
+tainan:[
+  // ── FOOD ──
+  ['台南紅太陽','台南市據點','—','台南特色食肆','','food',''],
+  ['體育場樺哥土產牛肉湯','台南市體育場附近','—','在地牛肉湯，必試土產鮮味','mustgo','food',''],
+  ['ゴゴ台所','台南市據點','—','日式風格輕食','','food',''],
+  ['稲満珈琲','台南市據點','—','特色咖啡廳','','food',''],
+  ['小餐港事','台南市據點','—','台南特色輕食','','food',''],
+  ['灃頌','中西區民族路三段206號','—','精緻麵包 / 烘焙','','food',''],
+  ['美鮮牛肉湯','台南市據點','—','牛肉湯（小）$130・蒜炒牛肉 $200','','food',''],
+  ['廣仔虱目魚丸','台南市據點','—','煎魚腸 $65・魚丸湯 $35・肉燥飯 $20','','food',''],
+  ['阿棠牛肉湯','台南市據點','—','台南在地牛肉湯','','food',''],
+  ['ee_waffles','中西區國華街三段26號B22','—','特色窩夫','','food',''],
+  ['台南燒肉 東區','東區大同路一段91號','—','台南燒肉','','food',''],
+  // ── DRINKS ──
+  ['揣茶','北區長北街66號','—','⏰ 10:00–17:00（二三四公休）台南必喝！茶冰磚無糖茶','mustgo','drinks',''],
+  ['茶谷TUGU','台南市據點','—','鮮蘋杉林溪青茶 $85','','drinks',''],
+  ['青山茶行','台南市據點','—','琥珀冰磚奶 $75・琥珀檸檬 $65','mustgo','drinks',''],
+  ['ice ice baby','中西區忠義路二段174號','—','特色手工冰茶','','drinks',''],
+  ['MOXI MOXI 焙茶專門店','中西區國華街三段26號B38','—','焙茶專門店','','drinks',''],
+  ['春茶吉苑','南區金華路二段146號','—','台南特色茶飲','','drinks',''],
+  // ── DESSERT ──
+  ['冰ㄉ かき氷','萬昌街39號','—','台南人氣刨冰','mustgo','dessert',''],
+  ['泰成水果店','正興街80號','—','哈密瓜冰船，必打卡','mustgo','dessert',''],
+  ['sui33','台南市據點','—','質感咖啡甜品空間','','dessert',''],
+  ['咚窩蕊喫茶店','台南市據點','—','昭和布丁 $180・提拉米蘇 $220','','dessert',''],
+  // ── EAT & GO ──
+  ['葉家小卷米粉','中西區國華街二段142號','—','小卷Q彈，街頭必試','','eatgo',''],
+  ['鬍鬚忠牛肉湯','中西區民族路三段91號','—','牛肉嫩，湯底鮮甜','','eatgo',''],
+  ['莉莉水果店','中西區府前路一段199號','—','水果愛好者必去，消暑','','eatgo',''],
+  ['金桃家 蜜柑白餡大福','南紡A1館B1（手扶梯落B1）','—','⚡ 快閃至 5/11','','eatgo',''],
+  ['阿美嬤紅茶奶','中西區開山路13號','—','⏰ 10:00–21:30','','eatgo',''],
+  ['瑪黑家紅茶專賣店','中西區忠義路二段133號','—','台南特色紅茶','','eatgo',''],
+  ['麗麗絲 Delixiu','中西區永福路二段34號','—','⏰ 09:00–21:00｜近台南美術二館','','eatgo',''],
+  ['wabisabidae','中西區友愛街180號','—','⏰ 平日10:00–19:00 / 假日11:00–20:00｜公休查IG @wabisabidae','','eatgo',''],
+  ['ToBe+ 兔彼炸物','中西區郡緯街3號','—','街頭炸物','','eatgo',''],
+  ['花食間 × Butter Roo','中西區神農街109號','—','⏰ 11:00–20:00 / 週三至21:30 🚫週一','','eatgo',''],
+  ['Butter Roo（東區）','東區東興路二號','—','⏰ 11:00–20:00 🚫週一','','eatgo',''],
+  ['叔炸甜不辣（創始店）','中西區中正路93號','—','⏰ 平日15:00–22:00 / 假日12:00–22:00 🚫週三','','eatgo',''],
+  ['金得春捲','中西區民族路三段19號','—','⏰ 07:30–16:30 🚫週二','','eatgo',''],
+  ['60+ Tea Shop 城中店','中西區中正路110號','—','⏰ 平日10:00–20:00（週五至21:00）/ 假日11:00–21:00','','eatgo',''],
+  ['冰鄉','中西區民生路一段160號','—','⏰ 12:00–20:00','','eatgo',''],
+  ['進福大灣花生糖 赤崁店','中西區民族路二段327號','—','⏰ 09:00–22:00','','eatgo',''],
+  ['來日方茶（府前店）','府前路','—','⏰ 09:00–21:00｜奶蓋茶飲','','eatgo',''],
+  ['溫爸鵝肉','北區西門路三段274號','—','⏰ 11:30–20:00 🚫週日｜米其林推薦','','eatgo',''],
+  // ── SHOPPING ──
+  ['台南三井 二期 萬代官方扭蛋','台南三井 Outlet Park 二期 2F','—','萬代官方扭蛋專賣店','','shopping',''],
+  ['ToyDaddy玩具老爹','中西區武聖路27巷23號（武聖夜市旁）','—','台南最可愛扭蛋盲盒店，百台扭蛋任挑','mustgo','shopping',''],
+  ['Weekend Goods Co. 成大店','東區勝利路118號B2（康是美樓下）','—','⏰ 11:00–21:00','','shopping',''],
+  // ── ACTIVITY ──
+  ['台南。迷你樂玩','台南市據點','—','台南特色體驗活動','','activity',''],
+  ['西市場市集','中西區西門路二段','—','台南傳統市集，打卡＋文青市集','','activity',''],
+  ['漁光大橋','台南市漁光大橋','—','台南網紅打卡橋，日落夜景必去','mustgo','activity',''],
+  ['頑皮世界野生動物園','學甲區頂洲75-25號','打的約40分鐘','⏰ 09:00–17:00｜全年無休｜🎟️ $480','mustgo','activity',''],
+  // ── BARS ──
+  ['稍爾 BAR SOUR','中西區保安路112號','—','台南特色酸系調酒 Bar','mustgo','bars',''],
+],
+
+taipei:{
+  dinner:[
+    ['驥園川菜餐廳','大安區金華街243巷3號','大安站','招牌川味麻油雞，午餐必食，建議訂位','eat mustgo','','大安'],
+    ['致青春 ToYouth','萬華區中華路一段94號','西門站','5/2 Clement晚餐 19:00｜口水雞・香辣水煮牛・湘味厚蛋','eat','','萬華'],
+    ['喜多鍋活體海鮮鍋物','台北市據點','視乎分店','頂級活體海鮮鍋，生日首選','bday','',''],
+    ['老井極上燒肉（信義）','台北市信義區','市政府站','高質信義燒肉，生日氣氛好','bday','','信義'],
+    ['東豐東鍋物','台北市據點','視乎分店','精緻鍋物，生日候選','bday','',''],
+    ['初海和牛鐵板燒','台北市據點','視乎分店','極致和牛鐵板燒饗宴','bday','',''],
+    ['毓 鐵板燒','台北市大安區','視乎分店','高級鐵板燒，儀式感十足','bday','','大安'],
+    ['鮨処律','大安區四維路216巷32號','信義安和站','頂級壽司，環境隱密高雅','','','信義'],
+    ['神樂坂割烹','信義區忠孝東路五段167號','市政府站','精緻日式割烹','','','信義'],
+    ['如嬌 花膠雞 鍋物','台北市據點','視乎分店','花膠雞湯奢華火鍋體驗','','',''],
+    ['原木燒肉','敦化南路一段190巷48號','忠孝復興站','全程專人代烤，原木香氣','','','東區'],
+    ['盧記麻辣鍋','台北市據點','視乎分店','在地經典麻辣鍋，湯底濃郁','','',''],
+    ['成吉思汗蒙古烤肉','台北市據點','視乎分店','IG 熱門，傳統蒙古烤肉體驗','','',''],
+    ['久碳吉炭火燒肉','台北市據點','視乎分店','炭火燒肉，香氣撲鼻','','',''],
+    ['詹記麻辣火鍋','台北市據點','視乎分店','台北知名麻辣火鍋','','',''],
+    ['馫麻辣沙龍','台北市據點','視乎分店','麻辣沙龍，個性化體驗','','',''],
+    ['門前隱味','萬華區漢口街二段20巷7號','西門站','隱密特色食肆','','','萬華'],
+    ['舌鼓燒肉','台北市據點','視乎分店','燒肉專門店','','',''],
+    ['Divino Taipei','大安區安和路二段71巷15號','信義安和站','精緻義式料理 / 選酒','','','信義'],
+    ['Butter Roox 花食間','台北市據點','視乎分店','精緻甜品空間','','',''],
+    ['鮨天本 登龍門','大安區忠孝東路四段216巷27弄16號','忠孝敦化站','傳奇天本姊妹店，性價比極高','','','東區'],
+    ['UNCLE SHAWN 燒肉','敦化南路一段160巷51號 / 236巷19號','忠孝復興站 / 敦化站','餐酒館風格燒肉，肉質極佳','','','東區'],
+    ['鼎旺麻辣鍋','大安路一段251號 / 229號','大安站 4號出口','必食滷雞腳','','','大安'],
+    ['初魚 鮨（新光店）','信義新光三越 A9 館','市政府站 3號口','高性價比 Omakase','','','信義'],
+    ['囲 KAKOI','民權東路二段152巷5弄4號','行天宮站 4號出口','日式洋風居酒屋','','','中山'],
+    ['Mouba Yaki 某吧','中山北路一段126巷8號','中山站 2號出口','明太子薯仔、家常紅燒肉','','','中山'],
+    ['Fugu Gastropub','嘉興街30號','台北101站 2號出口','漬筋子海鮮土鍋飯','','','信義'],
+    ['旭集 和食集錦','台北多據點','市政府站','高質日式 Buffet，需提早訂位','','','信義'],
+    ['青花驕','中山北路一段137號','中山站 2號出口','人氣麻辣鍋','','','中山'],
+    ['雞家莊','長春路55號','中山站','三色雞、蔥爆蚵仔','','','中山'],
+    ['上吉燒肉','延吉街131巷41號','國父紀念館站','桌邊專業代烤，高品質和牛','','','松山'],
+    ['長白小館','光復南路240巷21號','國父紀念館站 2號口','馳名酸菜白肉鍋','','','松山'],
+    ['醉忘川','台北據點','視乎分店','日式居酒屋','','',''],
+    ['壽司嬤','台北據點','視乎分店','職人手作壽司','','',''],
+  ],
+  cafe:[
+    ['seseragi.tart','台北市據點','視乎分店','精緻法式塔，MM 指定要去','mustgo','',''],
+    ['雞窩餐廳','大安區敦化南路二段81巷63號','忠孝復興站 / 大安站','招牌雞湯溫補暖胃','mustgo','','大安'],
+    ['雞湯人生','大安區大安路一段51巷10號','大安站','⏰ 12:00–14:30 / 17:00–21:00，酒後療癒一碗','mustgo','','大安'],
+    ['COFE 喫茶 咖啡','大同區迪化街一段248號2樓','中山站','迪化街文青二樓咖啡廳','','','中山'],
+    ['山與麻糬','赤峰街（中山）','中山站','中山赤峰街特色麻糬甜品','mustgo','','中山'],
+    ['茶萃 Cha Trade','台北市據點','視乎分店','特色精品茶飲','','',''],
+    ['Mateas 鮮奶茶沙龍','台北市據點','視乎分店','特色鮮奶茶沙龍','','',''],
+    ['侍茶匠','台北市據點','視乎分店','茶飲專門店','','',''],
+    ['萬茶里','台北市據點','視乎分店','特色茶飲','','',''],
+    ['山米咖啡所','台北市據點','視乎分店','特色咖啡廳','','',''],
+    ['Relay Juicetail Bar','台北市據點','視乎分店','果汁調酒 Bar','','',''],
+    ['熱那亞義式冰淇淋','台北市據點','視乎分店','正宗義式 Gelato','','',''],
+    ['穗月朝食','萬華區大理街163號','龍山寺站','⏰ 08:00–15:30，精緻特色早餐','','','萬華'],
+    ['1021 炭烤吐司 總店','中山區錦州街254號','中山國中站 / 行天宮站','⏰ 07:00–14:00（假日8點），炭烤吐司','','','中山'],
+    ['有耳朵早午餐','信義區光復南路419巷62號','國父紀念館站 3號口','質感 Brunch，特色拼盤','','','松山'],
+    ['Saturn Landing','信義區逸仙路42巷19號','市政府站','⏰ 09:00–18:00，特色土耳其咖啡','','','信義'],
+    ['Local Local','長安西路19巷2弄29號','中山站','歐式小酒館 × 創意 Tapas，約會首選','','','中山'],
+    ['The Other Eatery','中山區長安西路38號','中山站','精緻中山小酒館，外帶調酒400mL','','','中山'],
+    ['浪漫銀河大舞廳','台北市據點','視乎分店','超強復古氛圍餐酒館','','',''],
+    ['JUNE30TH','台北市據點','視乎分店','IG 熱門，簡約高雅','','',''],
+    ['INCOMING','敦化南路一段69號','忠孝敦化站','潮流聚集地，設計感強','','','東區'],
+    ['Fine Pasta','台北市據點','視乎分店','精緻意大利麵','','',''],
+    ['星曜雞湯','台北市據點','視乎分店','特色雞湯料理','','',''],
+    ['川畝園 必比登','大同區承德路二段1巷31號','—','CP值高，牛肉捲必點','','','中山'],
+    ['月里つきさと','中山區南京東路一段13巷7弄2-6號','中山站 / 松江南京站','台北最厲害布丁，焦糖偏苦不膩','','','中山'],
+    ['Miss V Bakery Cafe','大同區赤峰街49巷22號1樓','中山站','肉桂捲推薦','','','中山'],
+    ['SOMA','中山北路二段20巷23號','中山站','逛完赤峰街歇腳飲品','','','中山'],
+    ['達克炸雞','台北市據點','視乎分店','特色炸雞','','',''],
+    ['阿洋義式冰淇淋','台北市據點','視乎分店','手工現製，口感綿密','','',''],
+    ['暖男炸雞','台北市據點','視乎分店','獨特醃料，酥脆多汁','','',''],
+    ['百佳起司條','台北市據點','視乎分店','經典起司小食','','',''],
+    ['冰茶專賣店','台北市據點','視乎分店','特色手工冰茶','','',''],
+    ['TUGU荼谷','台北市據點','視乎分店','特色茶飲 / Cafe','','',''],
+    ['福菓坊 FU GUO','台北市據點','視乎分店','精緻甜點 / 伴手禮','','',''],
+    ['一甲子餐飲','萬華區康定路79號','龍山寺站','⏰ 09:00–19:00（週日休），傳奇滷肉飯','','','萬華'],
+    ['周記肉粥店','萬華區廣州街104號','龍山寺站','⏰ 06:30–16:00，百年古早味肉粥','','','萬華'],
+    ['ㄧ志雞排','中正區濟南路一段13巷','善導寺站','⏰ 14:30–17:30（六日休），下午茶炸雞','','','中正'],
+    ['老宋記真善美牛肉麵','大安區安居街47號','六張犁站','湯頭濃郁，牛肉軟嫩','','','大安'],
+    ['軟食力 Soft Power','民權東路二段135巷30弄21號','行天宮站','人氣粉漿蛋餅','','','中山'],
+    ['人x人 renxren','大安區信義路四段30巷52號','大安站 4號出口','台東吐司名店，口感紮實','','','大安'],
+    ['Well Done Art Cafe','八德路三段106巷118號','國父紀念館站','藝術氛圍咖啡廳，適合打卡','','','松山'],
+    ['亞當他媽的可麗餅','農安街2巷21號','民權西路站 9號口','脆皮創意可麗餅','','','中山'],
+    ['Libreadry 巢屋','仁愛路四段345巷4弄28號','忠孝敦化站 3號出口','明太子麵包（搶購預警）','mustgo','','東區'],
+    ['阿城鵝肉','吉林路105號','行天宮站 1號出口','鵝肉、鵝油飯','','','中山'],
+    ['雙月食品社','忠孝東路一段14號','善導寺站 2號出口','雞湯、愛恨椒芝麵','','','中正'],
+    ['興波咖啡 Simple Kaffa','忠孝東路二段27號','忠孝新生站 1號出口','世界冠軍咖啡','','','東區'],
+    ['數寄屋 辻葉','泰順街33-5號','台電大樓站','柚子鹽雞白湯拉麵','','','大安'],
+    ['竣師傅牛肉麵','大安路一段52巷24號','忠孝復興站 4號出口','湯頭濃郁，牛肉軟嫩','','','東區'],
+    ['二屋牡蠣拉麵','赤峰街35巷11號','中山站 4號出口','湯頭極鮮','','','中山'],
+    ['小王煮瓜','華西街174號','龍山寺站 1號出口','黑金魯肉飯，米芝蓮推介','','','萬華'],
+    ['金鋒魯肉飯','羅斯福路一段10號','中正紀念堂站 2號口','老字號，口味鹹香','','','中正'],
+    ['今大魯肉飯','三重區大仁街40號','菜寮站 3號出口','傳奇級魯肉飯（較遠）','','',''],
+    ['魚堺拉麵','中山區','雙連站','日式拉麵','','','中山'],
+    ['56巷口湯包','板橋區','視乎地點','皮薄汁多高質湯包','','',''],
+  ],
+  dessert:[
+    ['熊美冰菓室','台北市據點','視乎分店','特色冰品甜品','','',''],
+    ['豆花莊','台北市據點','視乎分店','傳統豆花，台灣古早味','','',''],
+    ['榕美樹館','中山區民生西路66巷21號','中山站','有芋圓地瓜圓（MM禁忌），其他項目可食','warn','','中山'],
+    ['甜滿 牛扎餅','大安區永康街','東門站','永康街牛扎餅專賣，必買手信','mustgo','','大安'],
+    ['Greenhouse','信義路四段395巷6弄8號','台北101站 2號出口','高質感甜品空間','','','信義'],
+  ],
+  bars:[
+    ['Bar igloo by','台北市據點','視乎分店','特色酒吧','','',''],
+    ['JupJup 精釀生啤','台北市據點','視乎分店','精釀啤酒餐酒館，宵夜小酌','','',''],
+    ['Bar Soft Cure','大安區復興南路一段253巷25號','大安站 6號出口','溫馨治癒路線，調酒細緻','','','大安'],
+    ['緣側 engawa','忠孝東路五段790巷25弄7號','象山站 2號出口','需預約，寧靜日式喫茶','mustgo','','信義'],
+    ['Bar Pine 松','文昌街138號','信義安和站 2號口','摩登松木風格，環境 Chill','','','信義'],
+    ['Bar Tokyo Taipei','市民大道四段86號','忠孝復興站 5號出口','白柚酥炸雞皮、明太子山藥','','','東區'],
+    ['Tei by O Bond','光復南路553號','國父紀念館站','結合茶文化嘅創意調酒','','','松山'],
+    ['Bar Weekend','信義路三段147巷18號','大安站','氣氛放鬆，專業調酒','','','大安'],
+    ['Bar Mood 吧沐','敦化南路一段160巷53號','忠孝復興站','世界級調酒水準','','','東區'],
+    ['酒精交易所','大安區','信義安和站','特色主題酒吧','','','信義'],
+    ['Feeling Bar 士林店','大南路110號','劍潭站 1號出口','士林專業調酒','','','士林'],
+  ],
+  shopping:[
+    ['Miffy POP-UP Store 2026 限定快閃','新光三越台北南西店一館 9F 活動會館','中山站','4/15–5/10，旅程期間限定！','mustgo','','中山'],
+    ['CHIIKAWA SHOP in TAIPEI','中山區長安西路19號','中山站','ちいかわ台北常設店，限定周邊必掃','mustgo','','中山'],
+    ['寶可夢中心 Pokemon Center','台北市信義區','市政府站 / 台北101站','打卡 / 周邊必掃','mustgo','','信義'],
+    ['i+Deal Lab','虎林街164巷72號','永春站 4號出口','指定買 Miffy','mustgo','','松山'],
+    ['Sequi','赤峰街47巷5號 2F','中山站 5號出口','女裝 / 中性，小眾質感設計','mustgo','','中山'],
+    ['V Store','赤峰街47巷5號','中山站 5號出口','古著 / 中性，復古風格','mustgo','','中山'],
+    ['White Flower × Blue Toy','大安區敦化南路二段63巷54弄2號','信義安和站','特色選物 / 精品','mustgo','','大安'],
+    ['舊目立屋','大同區赤峰街49巷2號1樓之4','中山站','古物餐具選物，文青寶庫','','','中山'],
+    ['Reverhaus','台北市據點','視乎分店','高質選物，風格強烈','','',''],
+    ['SKM MENS','信義新光三越 A9 館','市政府站','男裝選物','','','信義'],
+    ['Taigrance 小台香','台北市據點','視乎分店','專業香氛選物','','',''],
+    ['手信坊','台北市多據點','視乎分店','鳳梨酥 / 伴手禮','','',''],
+    ['Astea','文昌街236號','信義安和站','質感選物（四-一營業，需 IG 訂位）','','','信義'],
+    ['Fashion Jump Taipei','大安區敦化南路一段161巷19號','忠孝敦化站','男 / 女 / 中性裝，東區潮流','','','大安'],
+    ['CAME perfume','中山區','中山站','專業調香體驗（IG 預約）','','','中山'],
+    ['100 Life Japan','台北據點','視乎分店','日本高品質生活雜貨','','',''],
+    ['PhotoBooM','多間分店','中山站 4號出口','韓式拍貼機 / 精緻證件照','','','中山'],
+  ],
+  eatgo:[
+    ['甜境 SWEEDOM','大安區永康街13巷2號','東門站','⏰ 09:00–21:00｜金磚牛軋餅$240，可能早完售，建議早去','mustgo','','大安'],
+    ['躺平（綠豆沙牛乳）','大同區赤峰街47巷12號1樓','中山站4號出口步行4分鐘','⏰ 一-五11:30–20:00 / 六日12:00–20:00','','','中山'],
+    ['地一牛肉麵','大安區延吉街162號','國父紀念館站','⏰ 11:30–22:30','','','東區'],
+    ['The Other Eatery（外帶調酒）','中山區長安西路38號','中山站','400mL 外帶調酒，容量升級不加價','','','中山'],
+    ['逐愛轉運站 True Love Station','中山區中山北路二段39巷20號','中山站','⏰ 日-四 18:00–02:00 / 五六 18:00–03:00｜餐酒館','','','中山'],
+    ['Glow Head 頭皮SPA','大安區永康街2巷12號之一','東門站','⏰ 週二至日13:00–22:00 🚫週一','','','大安'],
+    ['小潘蛋糕坊','新北板橋區中正路135巷11之1號','板橋站（藍線）','⏰ 08:00–20:00｜鳳梨酥/鳳凰酥伴手禮','','',''],
+  ],
+  nightmarket:{
+    '🟠 臨江街夜市':[
+      ['紅花麻辣鹽水雞','臨江街103號','信義安和站','台北最強鹽水雞，麻辣口味正，必排隊','mustgo','','大安'],
+      ['正好鮮肉小籠包','臨江街夜市','信義安和站','皮薄蔥多','','','大安'],
+    ],
+    '🟠 南機場夜市':[
+      ['曉迪筒仔米糕','中華路二段307巷','—','南機場門神，米糕軟糯，排骨酥湯超入味','mustgo','','中正'],
+    ],
+    '🟠 饒河夜市':[
+      ['小胖子韓國糖餅','饒河街152號前中間攤位','—','韓式糖餅，外脆內軟','mustgo','','松山'],
+      ['麻糬寶寶','饒河夜市','—','現做麻糬，口味多','mustgo','','松山'],
+      ['身煎百戰','饒河夜市內','—','外皮焦脆，肉汁爆棚','','','松山'],
+      ['好腸好嚐','饒河夜市內','—','高梁酒香腸，酒味濃郁','','','松山'],
+      ['福島屋圓圓燒','饒河夜市內','—','高麗菜培根煎餅','','','松山'],
+      ['御品元冰火湯圓','饒河夜市內','—','手工湯圓配桂花挫冰','','','松山'],
+    ],
+    '🟠 寧夏夜市 大稻埕':[
+      ['方家雞肉飯','寧夏夜市','—','雞油香噴噴，必食','','','中山'],
+      ['大稻埕魯肉飯','大稻埕','—','古早味，肥而不膩','','','中山'],
+      ['永樂蔥油餅','大稻埕附近','—','酥脆好食','','','中山'],
+    ],
+  },
+},
+
+taoyuan:[
+  ['Xpark 水族館','桃園市中壢區春德路105號','機捷 A18 站步行','全台最大水族館，必玩','mustgo','activity',''],
+  ['台茂購物中心 Outlet','桃園市蘆竹區南崁路一段112號','桃園站轉巴士','台茂 Outlet，購物好去處','','shopping',''],
+  ['上菜 片皮鴨','台茂購物中心 6F','台茂','一鴨多食，值得一試','','food',''],
+  ['島瓜滷味','桃園','IG @daogua168','滷味｜IG查最新地址','','food',''],
+  ['岬角 JIA ZI YUAN','桃園中正店','—','品茶體驗','','activity',''],
+  ['江記華隆','台北市中正區（台北車站附近）','台北車站','台灣名物手信，肉鬆/伴手禮（5/3出發前買）','mustgo','shopping',''],
+],
+};
+
+const LUGGAGE={
+  '🧴 護膚':['洗面巾巾','Cotton pad','Cotton stick','Make up remover（卸妝）','Cleaning（洗面）','Toner','Eye cream（眼霜）','Serum（精華）','Cream（面霜）','Towel（毛巾）','滴露','Sunscreen（防曬）'],
+  '💄 化妝':['Foundation（粉底）','Pokpok / Powder（粉餅）','Concealer + Brush（遮瑕 + 掃）','Cheek（胭脂）','Eyeshadow（眼影）','Eyepen + Eyeliner（眼線）','Eyebrow（眉筆）'],
+  '💇 頭髮':['Hair oil（髮油）','Ribbon（絲帶）','Hair assy（髮飾）'],
+  '📦 其他':['Tissue','Wet tissue','WC tissue','Miffy tray（Miffy 托盤）','Con','Sleep wear（睡衣）','洗浴缸刷'],
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ITINERARY
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const ITIN=[
+  {id:'d0430',date:'4/30 (周三)',city:'🏯 台南',theme:'🛬 抵達・頑皮世界',steps:[
+    {tm:'08:00',tp:'transport',ti:'UO130 起飛',sub:'香港 HKG → 高雄 KHH',bk:true},
+    {tm:'09:30',tp:'transport',ti:'抵達高雄機場 KHH',sub:'搭客運往台南，約50–60分鐘'},
+    {tm:'11:00',tp:'activity',ti:'台南會展中心踩點',sub:'睇清楚5/1市集個場同入口'},
+    {tm:'11:30',tp:'hotel',ti:'三道門存放行李',sub:'中西區成功路77號｜放低行李即走，唔係正式check-in'},
+    {tm:'12:00',tp:'activity',ti:'頑皮世界野生動物園',sub:'學甲區頂洲75-25號｜打的約40分鐘｜⏰ 09:00–17:00｜🎟️ $480'},
+    {tm:'17:30',tp:'transport',ti:'返台南市區',sub:'打的約40分鐘'},
+    {tm:'傍晚',tp:'hotel',ti:'Check-in｜三道門建築文創旅店',sub:'正式辦理入住 + 梳洗'},
+    {tm:'傍晚',tp:'activity',ti:'正興街 / 神農街閒逛',sub:'台南老街打卡',fx:true},
+    {tm:'19:00',tp:'food',ti:'台南晚餐',sub:'自由選 → 見台南清單',fx:true},
+  ]},
+  {id:'d0501',date:'5/1 (周四)',city:'🏯 台南',theme:'🎪 Samba Studio 市集日',steps:[
+    {tm:'08:00',tp:'activity',ti:'Samba Studio 市集排隊拎籌',sub:'台南會展中心，早去排隊拎籌'},
+    {tm:'拎完籌',tp:'shopping',ti:'MITSUI OUTLET PARK',sub:'拎完去行下等開水晶'},
+    {tm:'下午',tp:'activity',ti:'西市場市集',sub:'中西區西門路二段一帶，文青市集打卡',fx:true},
+    {tm:'下午',tp:'activity',ti:'台南 Weekend Goods Co. Outlet',sub:'東區勝利路118號B2（康是美樓下）｜⏰ 11:00–21:00',fx:true},
+    {tm:'下午',tp:'food',ti:'台南下午茶 / 飲品',sub:'自由選 → 見台南清單',fx:true},
+    {tm:'晚上',tp:'activity',ti:'台南夜遊',sub:'漁光大橋夜景 / 保安路 稍爾BAR',fx:true},
+  ]},
+  {id:'d0502',date:'5/2 (周五)',city:'🏯→🗼 台南→台北',theme:'🚅 轉移台北・中山・致青春',
+   branchQ:'Samba Studio 市集買到咗？',steps:[],
+   brA:{label:'✅ 已買到',steps:[
+    {tm:'上午',tp:'activity',ti:'台南自由行',sub:'早班高鐵前自由活動',fx:true},
+    {tm:'中午前',tp:'transport',ti:'早班高鐵 台南→台北',sub:'建議11點前出發，約1.5小時'},
+   ]},
+   brB:{label:'😔 買唔到',steps:[
+    {tm:'上午',tp:'activity',ti:'Samba Studio 市集（再戰）',sub:'台南會展中心'},
+    {tm:'午後',tp:'transport',ti:'台南→台北（高鐵）',sub:'約1.5–2小時'},
+   ]},
+   stepsAfter:[
+    {tm:'午餐',tp:'food',ti:'驥園川菜餐廳',sub:'大安區金華街243巷3號｜大安站｜⚠️Branch A早車可趕及｜建議訂位'},
+    {tm:'下午',tp:'hotel',ti:'Check-in｜路徒Plus行旅 主題館',sub:'中正區忠孝西路一段80號（台北車站行5分鐘）'},
+    {tm:'下午',tp:'shopping',ti:'中山雙連行街',sub:'CHIIKAWA・Miffy Pop-up（南西一館9F）・赤峰街（Sequi / V Store / 山與麻糬）',fx:true},
+    {tm:'19:00',tp:'food',ti:'致青春 ToYouth｜Clement晚餐',sub:'萬華區中華路一段94號｜西門站',bk:true},
+    {tm:'飯後',tp:'activity',ti:'臨江街夜市',sub:'紅花麻辣鹽水雞｜信義安和站',fx:true},
+   ],
+  },
+  {id:'d0503',date:'5/3 (周六)',city:'🗼 台北',theme:'🎂 生日快樂！',steps:[
+    {tm:'上午',tp:'activity',ti:'迪化街 / 大稻埕',sub:'大同區迪化街一帶｜打卡 + 逛街（同一區）',fx:true},
+    {tm:'上午',tp:'food',ti:'大稻埕食野',sub:'自由選 → 見台北清單',fx:true},
+    {tm:'午後',tp:'shopping',ti:'江記華隆 買手信',sub:'台北車站附近｜台灣名物伴手禮'},
+    {tm:'下午',tp:'food',ti:'水色洋菓房｜拎生日蛋糕',sub:'mizuiro_tw，建議14:00前',bk:true},
+    {tm:'下午',tp:'hotel',ti:'返路徒Plus放蛋糕',sub:'打的返去'},
+    {tm:'下午',tp:'shopping',ti:'忠孝/東區',sub:'CHIIKAWA・Miffy Pop-up（南西一館9F）',fx:true},
+    {tm:'17:30',tp:'activity',ti:'CAME perfume 調香體驗',sub:'忠孝店｜已訂，需時90分鐘',bk:true},
+    {tm:'19:30',tp:'food',ti:'🎂 阪前鐵板燒｜生日晚餐',sub:'台北SOGO忠孝店｜已訂2位',bk:true},
+  ]},
+  {id:'d0504',date:'5/4 (周日)',city:'🗼→🌳 台北→桃園',theme:'🌳 轉移桃園',steps:[
+    {tm:'上午',tp:'activity',ti:'台北自由行',sub:'見台北清單',fx:true},
+    {tm:'下午',tp:'transport',ti:'台北→桃園',sub:'機捷 / 台鐵，約1小時'},
+    {tm:'傍晚',tp:'shopping',ti:'華泰名品城',sub:'美式露天購物村'},
+    {tm:'傍晚',tp:'hotel',ti:'Check-in｜Hotel Cozzi Blu 和逸飯店',sub:'中壢區春德路101號（機捷A18行8分鐘）'},
+    {tm:'晚上',tp:'food',ti:'桃園晚餐',sub:'上菜片皮鴨 / 岬角 → 見桃園清單',fx:true},
+    
+  ]},
+  {id:'d0505',date:'5/5 (周一)',city:'🌳 桃園',theme:'✈️ 回香港',steps:[
+    {tm:'上午',tp:'activity',ti:'Xpark 水族館',sub:'機捷 A18，步行可達，預留2–3小時',fx:true},
+    {tm:'下午',tp:'transport',ti:'前往桃園機場',sub:'機捷 A18 → 機場，預留至少1.5小時'},
+    {tm:'21:25',tp:'transport',ti:'UO117 起飛',sub:'TPE → HKG',bk:true},
+    {tm:'23:20',tp:'transport',ti:'抵達香港 HKG',sub:''},
+  ]},
+];
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// STATE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let curPage='home';
+let tpCats=new Set();
+let tnCats=new Set();
+let tyCats=new Set();
+let tpDists=new Set();
+let curQ={tainan:'',taipei:'',taoyuan:''};
+let branch={};
+let stepDone={};
+
+function lsg(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch{return{}}}
+function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function getV(){return lsg('mmv')}
+function getW(){return lsg('mmw')}
+function togV(n){const s=getV();s[n]=!s[n];lss('mmv',s);render()}
+function togW(n){const s=getW();s[n]=!s[n];lss('mmw',s);render()}
+
+const TM={mustgo:'<span class="tg mg">⭐ MUST GO</span>',bday:'<span class="tg bd">🎂 生日候選</span>',warn:'<span class="tg wn2">⚠️ 注意</span>',eat:'<span class="tg et">👍 必食</span>'};
+function mkTags(tags,dist,showDist){
+  let h=(tags||'').split(' ').filter(Boolean).map(x=>TM[x]||'').join('');
+  if(showDist&&dist)h+=`<span class="tg dt">📍 ${dist}</span>`;
+  return h;
+}
+
+function sortItems(items){
+  const v=getV(),w=getW();
+  return [...items].sort((a,b)=>{
+    const am=(a[4]||'').includes('mustgo')?1:0,bm=(b[4]||'').includes('mustgo')?1:0;
+    const av=v[a[0]]?1:0,bv=v[b[0]]?1:0;
+    const aw=w[a[0]]?1:0,bw=w[b[0]]?1:0;
+    return(bm-am)||(bw-aw)||(av-bv);
+  });
+}
+
+function isMustgo(item){return(item[4]||'').includes('mustgo')}
+
+function filterItems(items,q,cats,dists){
+  return items.filter(item=>{
+    const[n,,,note,tags,sc,dist]=item;
+    const qok=!q||n.toLowerCase().includes(q)||(note||'').toLowerCase().includes(q);
+    let cok=true;
+    if(cats&&cats.size>0){
+      if(cats.has('mustgo')) cok=isMustgo(item);
+      else cok=cats.has(sc);
+    }
+    const dok=!dists||dists.size===0||dists.has(dist);
+    return qok&&cok&&dok;
+  });
+}
+
+let _ni=0;const NM={};
+function mkCard(item,showDist){
+  const[name,addr,tr,note,tags,,dist]=item;
+  const v=getV()[name],w=getW()[name];
+  const tH=mkTags(tags,dist,showDist);
+  const meta=[];
+  if(addr&&addr!=='—')meta.push('📍 '+addr);
+  if(tr&&tr!=='—'&&tr!=='視乎分店')meta.push('🚇 '+tr);
+  const i=_ni++;
+  NM[curPage]=NM[curPage]||{};
+  NM[curPage][i]=name;
+  const noMap=!addr||addr==='—'||addr.includes('據點')||addr.includes('視乎')||addr.startsWith('IG')||addr==='—';
+  const mapSrc=noMap?null:`https://maps.google.com/maps?q=${encodeURIComponent(addr)}&output=embed&z=16&hl=zh-TW`;
+  return`<div class="card${v?' vs':''}${w?' wn':''}" data-ci="${i}">
+    ${tH?`<div class="tgs">${tH}</div>`:''}
+    <div class="cnm">${name}</div>
+    ${meta.length?`<div class="cmt">${meta.join('&nbsp;·&nbsp;')}</div>`:''}
+    ${note?`<div class="cno">${note}</div>`:''}
+    <div class="ca">
+      <button class="ab v${v?' on':''}" data-ac="v" data-ci="${i}">${v?'✅ 去過':'○ 去過'}</button>
+      <button class="ab w${w?' on':''}" data-ac="w" data-ci="${i}">${w?'❤️ 想去':'🤍 想去'}</button>
+    </div>
+    ${mapSrc?`<button class="map-toggle" onclick="togMap(this)">🗺️ 顯示地圖</button><div class="map-wrap"><iframe data-src="${mapSrc}" loading="lazy"></iframe></div>`:''}
+  </div>`;
+}
+
+function renderList(elId,items,q,cats,dists,showDist){
+  const el=document.getElementById(elId);if(!el)return;
+  _ni=0;NM[curPage]={};
+  const f=sortItems(filterItems(items,q,cats,dists));
+  el.innerHTML=f.length?f.map(it=>mkCard(it,showDist)).join(''):`<div class="empty"><div class="ei">🔍</div><p>搵唔到...</p></div>`;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TAIPEI
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const tpCatList=['dinner','cafe','dessert','bars','shopping','eatgo'];
+function renderTP(){
+  const el=document.getElementById('cards-taipei');if(!el)return;
+  const q=curQ.taipei;
+  const showDist=tpDists.size>0;
+  if(tpCats.has('nightmarket')){renderNM(q);return;}
+  let all=[];
+  if(tpCats.size===0||tpCats.has('mustgo')){
+    tpCatList.forEach(c=>all=all.concat(D.taipei[c]||[]));
+  } else {
+    tpCatList.forEach(c=>{if(tpCats.has(c))all=all.concat(D.taipei[c]||[]);});
+  }
+  _ni=0;NM.taipei={};
+  const f=sortItems(filterItems(all,q,tpCats.has('mustgo')?new Set(['mustgo']):new Set(),tpDists));
+  el.innerHTML=f.length?f.map(it=>mkCard(it,showDist)).join(''):`<div class="empty"><div class="ei">🔍</div><p>搵唔到...</p></div>`;
+}
+
+function renderNM(q){
+  const el=document.getElementById('cards-taipei');if(!el)return;
+  _ni=0;NM.taipei={};let h='';
+  for(const[mk,items]of Object.entries(D.taipei.nightmarket)){
+    const f=sortItems(filterItems(items,q,null,tpDists));
+    if(!f.length)continue;
+    h+=`<div class="mks"><span class="mkt">${mk}</span>${f.map(it=>mkCard(it,false)).join('')}</div>`;
+  }
+  el.innerHTML=h||`<div class="empty"><div class="ei">🔍</div><p>搵唔到...</p></div>`;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ITINERARY
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const SICO={transport:'🚌',food:'🍽️',activity:'🎯',hotel:'🏨',shopping:'🛍️'};
+function mkStep(s,dayId,idx){
+  const k=`${dayId}_${idx}`;const done=stepDone[k]||false;
+  return`<div class="step${done?' done':''}" id="step_${k}">
+    <input type="checkbox" class="step-cb" ${done?'checked':''} data-sk="${k}">
+    <div class="sico ${s.tp}">${SICO[s.tp]||'•'}</div>
+    <div class="sinfo">
+      <div class="stime">${s.tm}</div>
+      <div class="stitle">${s.ti}</div>
+      ${s.sub?`<div class="ssub">${s.sub}</div>`:''}
+      ${s.bk?`<span class="sbk">📌 已訂</span>`:''}
+      ${s.fx?`<span class="sfx">（自由選）</span>`:''}
+    </div>
+  </div>`;
+}
+
+function renderItin(){
+  const el=document.getElementById('itin-content');if(!el)return;
+  let h='';
+  ITIN.forEach(day=>{
+    h+=`<div class="dcard"><div class="dhd"><div class="ddate">${day.date}</div><div class="dtheme">${day.theme}</div><div class="dcity">${day.city}</div></div>`;
+    if(day.branchQ){
+      const sel=branch[day.id]||null;
+      h+=`<div class="brq"><p>${day.branchQ}</p><div class="brtog">
+        <button class="brbtn${sel==='A'?' on':''}" data-br="A" data-dayid="${day.id}">${day.brA.label}</button>
+        <button class="brbtn${sel==='B'?' on':''}" data-br="B" data-dayid="${day.id}">${day.brB.label}</button>
+      </div></div>`;
+    }
+    const br=branch[day.id];
+    let steps=[...(day.steps||[])];
+    if(day.branchQ&&br==='A')steps=[...steps,...day.brA.steps];
+    else if(day.branchQ&&br==='B')steps=[...steps,...day.brB.steps];
+    if(day.stepsAfter)steps=[...steps,...day.stepsAfter];
+    h+=`<div class="tl">${steps.map((s,i)=>mkStep(s,day.id,i)).join('')}</div></div>`;
+  });
+  el.innerHTML=h;
+  el.querySelectorAll('.step-cb').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      stepDone[cb.dataset.sk]=cb.checked;
+      document.getElementById('step_'+cb.dataset.sk)?.classList.toggle('done',cb.checked);
+    });
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LUGGAGE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let lugBuilt=false;
+function renderLug(){
+  const el=document.getElementById('lug-content');if(!el)return;
+  if(lugBuilt){updProg();return;}lugBuilt=true;
+  let idx=0,h=`<div class="lpr"><h3>打包進度</h3><div class="pb"><div class="pf" id="pf" style="width:0%"></div></div><div class="px" id="px"></div></div>`;
+  for(const[sec,items]of Object.entries(LUGGAGE)){
+    h+=`<div class="lsc"><h3>${sec}</h3><div class="cg">`;
+    items.forEach(item=>{idx++;const k='lug'+idx;const ck=localStorage.getItem(k)==='1';
+      h+=`<div class="ch${ck?' ck':''}" id="cp_${k}"><input type="checkbox" id="${k}"${ck?' checked':''}><label for="${k}">${item}</label></div>`;
+    });h+='</div></div>';
+  }
+  el.innerHTML=h;updProg();
+  el.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      localStorage.setItem(cb.id,cb.checked?'1':'0');
+      document.getElementById('cp_'+cb.id)?.classList.toggle('ck',cb.checked);updProg();
+    });
+  });
+}
+function updProg(){
+  let t=0,c=0,i=0;
+  Object.values(LUGGAGE).forEach(items=>items.forEach(()=>{i++;t++;if(localStorage.getItem('lug'+i)==='1')c++;}));
+  const pct=t?Math.round(c/t*100):0;
+  document.getElementById('pf')?.style.setProperty('width',pct+'%');
+  const px=document.getElementById('px');if(px)px.textContent=c+' / '+t+' 已打包';
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// RENDER DISPATCH
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function render(){
+  if(curPage==='tainan') renderList('cards-tainan',D.tainan,curQ.tainan,tnCats,null,false);
+  else if(curPage==='taipei') renderTP();
+  else if(curPage==='taoyuan') renderList('cards-taoyuan',D.taoyuan,curQ.taoyuan,tyCats,null,false);
+  else if(curPage==='luggage') renderLug();
+  else if(curPage==='itin') renderItin();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// NAV
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function goTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+page)?.classList.add('active');
+  document.getElementById('nav-'+page)?.classList.add('active');
+  curPage=page;render();window.scrollTo(0,0);
+  if(['tainan','taipei','taoyuan'].includes(page)){
+    setTimeout(()=>initCityMap(page),80);
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DRAG SCROLL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function initDrag(el){
+  if(!el)return;let dn=false,sx,sl;
+  el.addEventListener('mousedown',e=>{dn=true;el.classList.add('dg');sx=e.pageX-el.offsetLeft;sl=el.scrollLeft;});
+  el.addEventListener('mouseleave',()=>{dn=false;el.classList.remove('dg');});
+  el.addEventListener('mouseup',()=>{dn=false;el.classList.remove('dg');});
+  el.addEventListener('mousemove',e=>{if(!dn)return;e.preventDefault();el.scrollLeft=sl-(e.pageX-el.offsetLeft-sx);});
+}
+document.querySelectorAll('.ftabs').forEach(initDrag);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// TOGGLE HELPERS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function toggleCat(catSet,cat,isSolo){
+  if(catSet.has(cat)){
+    catSet.delete(cat);
+  } else {
+    if(isSolo||cat==='mustgo'){
+      catSet.clear();catSet.add(cat);
+    } else {
+      ['mustgo','nightmarket'].forEach(s=>catSet.delete(s));
+      catSet.add(cat);
+    }
+  }
+}
+
+function syncTabUI(tabsId,activeSet){
+  document.querySelectorAll('#'+tabsId+' .ftab').forEach(t=>{
+    t.classList.toggle('on',activeSet.has(t.dataset.cat));
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// EVENT DELEGATION
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.addEventListener('click',e=>{
+  const gt=e.target.closest('[data-goto]');if(gt){goTo(gt.dataset.goto);return;}
+
+  const ct=e.target.closest('.ftab:not(.dist)');
+  if(ct&&ct.dataset.city&&ct.dataset.cat){
+    const city=ct.dataset.city,cat=ct.dataset.cat;
+    const isSolo=!!ct.dataset.solo;
+    if(city==='tainan'){toggleCat(tnCats,cat,isSolo);syncTabUI('tabs-tainan',tnCats);}
+    else if(city==='taipei'){toggleCat(tpCats,cat,isSolo);syncTabUI('tabs-taipei',tpCats);}
+    else if(city==='taoyuan'){toggleCat(tyCats,cat,isSolo);syncTabUI('tabs-taoyuan',tyCats);}
+    render();
+    updateCityMapMarkers(city);
+    return;
+  }
+
+  const dt=e.target.closest('.ftab.dist');
+  if(dt&&dt.dataset.dist){
+    const d=dt.dataset.dist;
+    const wasAdding=!tpDists.has(d);
+    if(tpDists.has(d))tpDists.delete(d);else tpDists.add(d);
+    dt.classList.toggle('on',tpDists.has(d));
+    render();
+    updateCityMapMarkers('taipei');
+    if(wasAdding) panToDistrict(d,'taipei');
+    else if(tpDists.size===0) panToDistrict(null,'taipei');
+    return;
+  }
+
+  const ab=e.target.closest('.ab[data-ac]');
+  if(ab){
+    const ci=parseInt(ab.dataset.ci);
+    const name=(NM[curPage]||{})[ci];
+    if(!name)return;
+    if(ab.dataset.ac==='v')togV(name);
+    if(ab.dataset.ac==='w')togW(name);
+    return;
+  }
+
+  const bb=e.target.closest('.brbtn[data-br]');
+  if(bb){
+    const dayId=bb.dataset.dayid,br=bb.dataset.br;
+    branch[dayId]=branch[dayId]===br?null:br;
+    renderItin();return;
+  }
+});
+
+['tainan','taipei','taoyuan'].forEach(city=>{
+  document.getElementById('si-'+city)?.addEventListener('input',e=>{
+    curQ[city]=e.target.value.trim().toLowerCase();
+    if(curPage===city)render();
+  });
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MAIN CITY MAPS (Leaflet)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const CITY_CTR={
+  taipei:{c:[25.0478,121.5319],z:12},
+  tainan:{c:[22.9990,121.0],z:13},
+  taoyuan:{c:[24.9890,121.3010],z:13},
+};
+// fix tainan lng
+CITY_CTR.tainan.c[1]=120.2120;
+
+const TP_DIST={
+  '中山':[25.0630,121.5290],'大安':[25.0260,121.5430],
+  '東區':[25.0410,121.5570],'信義':[25.0340,121.5640],
+  '松山':[25.0500,121.5780],'萬華':[25.0400,121.4990],
+  '中正':[25.0430,121.5160],'士林':[25.0930,121.5210],
+};
+const TN_DIST={
+  '中西區':[22.9970,120.2020],'東區':[22.9930,120.2220],
+  '北區':[23.0180,120.2050],'南區':[22.9780,120.2020],
+  '學甲區':[23.1380,120.1720],
+};
+
+const PIN_COLOR={
+  food:'#e8637a',dinner:'#e8637a',drinks:'#4a9fc8',cafe:'#4a9fc8',
+  dessert:'#c060a0',eatgo:'#3ab87a',shopping:'#8050c8',
+  bars:'#4060c8',activity:'#c89020',nightmarket:'#d07020',
+};
+const PIN_EMOJI={
+  food:'🍜',dinner:'🍾',drinks:'🧋',cafe:'☕',dessert:'🍮',
+  eatgo:'🥡',shopping:'🛍️',bars:'🍸',activity:'🎯',nightmarket:'🏮',
+};
+const PIN_LABEL={
+  food:'食肆',dinner:'晚餐',drinks:'飲品',cafe:'Cafe',dessert:'甜品',
+  eatgo:'Eat&Go',shopping:'購物',bars:'酒吧',activity:'體驗',nightmarket:'夜市',
+};
+
+function strHash(s){let h=0;for(const c of s)h=((h*31)+c.charCodeAt(0))&0xffff;return h;}
+
+function getCoords(item,city){
+  const[name,addr,,,,,dist]=item;
+  const h=strHash(name);
+  const jx=((h%100)-50)*0.00006;
+  const jy=(((h>>4)%100)-50)*0.00006;
+  let base;
+  if(city==='taipei'){
+    base=TP_DIST[dist]||CITY_CTR.taipei.c;
+  } else if(city==='tainan'){
+    let d=null;
+    for(const k of Object.keys(TN_DIST)){if(addr&&addr.includes(k)){d=k;break;}}
+    base=d?TN_DIST[d]:CITY_CTR.tainan.c;
+  } else {
+    base=CITY_CTR.taoyuan.c;
+  }
+  return[base[0]+jx,base[1]+jy];
+}
+
+function makeIcon(cat){
+  const col=PIN_COLOR[cat]||'#888';
+  const em=PIN_EMOJI[cat]||'📍';
+  return L.divIcon({
+    html:`<div style="width:28px;height:28px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-size:13px;border:2.5px solid #fff;box-shadow:0 2px 7px rgba(0,0,0,0.28);line-height:1">${em}</div>`,
+    className:'',iconSize:[28,28],iconAnchor:[14,14],popupAnchor:[0,-16],
+  });
+}
+
+function allCityItems(city){
+  const out=[];
+  if(city==='tainan'){
+    D.tainan.forEach(it=>out.push({item:it,cat:it[5]||'food'}));
+  } else if(city==='taipei'){
+    ['dinner','cafe','dessert','bars','shopping','eatgo'].forEach(cat=>(D.taipei[cat]||[]).forEach(it=>out.push({item:it,cat})));
+    Object.values(D.taipei.nightmarket).forEach(items=>items.forEach(it=>out.push({item:it,cat:'nightmarket'})));
+  } else if(city==='taoyuan'){
+    D.taoyuan.forEach(it=>out.push({item:it,cat:it[5]||'food'}));
+  }
+  return out;
+}
+
+const cityMaps={};
+const cityMarkers={};
+
+function buildLegend(city){
+  const el=document.getElementById('leg-'+city);
+  if(!el||el.dataset.built) return;
+  el.dataset.built='1';
+  const cats=new Set(allCityItems(city).map(x=>x.cat));
+  cats.forEach(cat=>{
+    const col=PIN_COLOR[cat]||'#888';
+    const lbl=PIN_LABEL[cat]||cat;
+    const d=document.createElement('div');
+    d.className='mleg';
+    d.innerHTML=`<div class="mleg-dot" style="background:${col}"></div>${lbl}`;
+    el.appendChild(d);
+  });
+}
+
+function initCityMap(city){
+  buildLegend(city);
+  if(cityMaps[city]){cityMaps[city].invalidateSize();return;}
+  const el=document.getElementById('map-'+city);
+  if(!el)return;
+  const ctr=CITY_CTR[city];
+  const map=L.map(el,{center:ctr.c,zoom:ctr.z,zoomControl:true,attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(map);
+  cityMaps[city]=map;
+  cityMarkers[city]=[];
+  allCityItems(city).forEach(({item,cat})=>{
+    const[name,addr,,note]=item;
+    const coords=getCoords(item,city);
+    const mk=L.marker(coords,{icon:makeIcon(cat)});
+    mk.bindPopup(
+      `<div style="font-family:'Nunito',sans-serif;min-width:160px">
+        <div style="font-weight:900;font-size:13px;margin-bottom:3px">${name}</div>
+        ${addr&&addr!=='—'&&!addr.includes('據點')&&!addr.includes('視乎')?`<div style="font-size:10.5px;color:#888;margin-bottom:2px">📍 ${addr}</div>`:''}
+        ${note?`<div style="font-size:11px;color:#555;line-height:1.4">${note}</div>`:''}
+      </div>`,
+      {maxWidth:220}
+    );
+    mk.addTo(map);
+    cityMarkers[city].push({marker:mk,item,cat});
+  });
+}
+
+function updateCityMapMarkers(city){
+  if(!cityMaps[city])return;
+  const map=cityMaps[city];
+  (cityMarkers[city]||[]).forEach(({marker,item,cat})=>{
+    const[name,addr,tr,note,tags,sc,dist]=item;
+    let show=true;
+    if(city==='taipei'){
+      if(tpCats.size===0) show=true;
+      else if(tpCats.has('mustgo')) show=(tags||'').includes('mustgo');
+      else if(tpCats.has('nightmarket')) show=(cat==='nightmarket');
+      else show=tpCats.has(cat);
+      if(show&&tpDists.size>0) show=tpDists.has(dist);
+    } else if(city==='tainan'){
+      if(tnCats.size===0) show=true;
+      else if(tnCats.has('mustgo')) show=(tags||'').includes('mustgo');
+      else show=tnCats.has(sc);
+    } else if(city==='taoyuan'){
+      if(tyCats.size===0) show=true;
+      else if(tyCats.has('mustgo')) show=(tags||'').includes('mustgo');
+      else show=tyCats.has(sc);
+    }
+    if(show){if(!map.hasLayer(marker))marker.addTo(map);}
+    else{if(map.hasLayer(marker))map.removeLayer(marker);}
+  });
+}
+
+function panToDistrict(dist,city){
+  if(!cityMaps[city])return;
+  const map=cityMaps[city];
+  let coords,zoom;
+  if(city==='taipei'&&dist&&TP_DIST[dist]){coords=TP_DIST[dist];zoom=15;}
+  else if(city==='tainan'&&dist&&TN_DIST[dist]){coords=TN_DIST[dist];zoom=15;}
+  else{coords=CITY_CTR[city].c;zoom=CITY_CTR[city].z;}
+  map.flyTo(coords,zoom,{duration:0.7});
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MAP TOGGLE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+window.togMap=function(btn){
+  const wrap=btn.nextElementSibling;
+  const open=wrap.classList.toggle('show');
+  btn.classList.toggle('open',open);
+  btn.textContent=open?'🗺️ 收起地圖':'🗺️ 顯示地圖';
+  if(open){
+    const f=wrap.querySelector('iframe');
+    if(f&&f.dataset.src&&!f.getAttribute('src')){f.src=f.dataset.src;}
+  }
+};
+
+render();
+</script>
+</body>
+</html>

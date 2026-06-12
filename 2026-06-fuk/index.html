@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>⛩️ FUK 福岡之旅 6/16–6/20</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pr:#9FC9E8;--prd:#5e9ec9;--prbg:#eaf4fb;          /* 海藍主色 */
+  --ac:#F5D78E;--acd:#c9a44a;                          /* 暖黃 accent */
+  --bg:#F2F8FC;--wh:#fff;
+  --tx:#27343d;--mt:#7d8e9a;
+  --gn:#d1fae5;--gnd:#059669;
+  --ht:#fde8e8;--htd:#c0392b;
+  --sh:0 2px 14px rgba(80,130,170,.14);
+  --r:16px;--f:'Nunito','Hiragino Sans','Microsoft JhengHei',sans-serif;
+}
+body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;margin:0 auto;padding-bottom:72px;min-height:100vh;-webkit-tap-highlight-color:transparent}
+.page{display:none}.page.active{display:block}
+
+/* ── Bottom nav ── */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--wh);border-top:2px solid var(--pr);display:flex;z-index:1000;box-shadow:0 -3px 16px rgba(80,130,170,.12)}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 0 8px;cursor:pointer;font-size:8px;font-weight:800;color:var(--mt);gap:1px;border:none;background:none;font-family:var(--f);transition:color .18s}
+.ntab .ic{font-size:16px;line-height:1}
+.ntab.active{color:#1f618d}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(135deg,var(--pr) 0%,var(--ac) 100%);padding:28px 20px 20px;text-align:center;position:relative;overflow:hidden}
+.hero::after{content:'⛩️🍣✈️';position:absolute;font-size:80px;opacity:.08;bottom:-12px;right:-8px;letter-spacing:-10px;pointer-events:none}
+.hero h1{font-size:20px;font-weight:900;color:#14405e;line-height:1.35}
+.hero p{font-size:12px;color:#3d6480;margin-top:5px;font-weight:700}
+
+/* ── Info card ── */
+.ic2{background:var(--wh);border-radius:var(--r);padding:13px 15px;margin:11px 16px 0;box-shadow:var(--sh)}
+.ic2 h3{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.ir{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #e8f1f7}
+.ir:last-child{border:none}
+.ir .lb{font-size:11px;color:var(--mt);font-weight:700;flex-shrink:0;padding-right:8px;line-height:1.5}
+.ir .vl{font-size:11px;font-weight:800;color:var(--tx);text-align:right;line-height:1.4}
+.ir .vl small{font-weight:600;color:var(--mt);display:block;font-size:10px}
+.tbc{color:var(--htd);font-weight:900}
+
+/* ── Area grid ── */
+.cgd{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:11px 16px 14px}
+.cc{background:var(--wh);border-radius:var(--r);padding:18px 12px;text-align:center;cursor:pointer;box-shadow:var(--sh);transition:transform .15s;border:2.5px solid transparent}
+.cc:active{transform:scale(.95)}
+.cc .ce{font-size:30px;display:block;margin-bottom:6px}
+.cc .cn{font-size:13px;font-weight:900}
+.cc .cd{font-size:10px;color:var(--mt);margin-top:2px;font-weight:700}
+.cc.a1{border-color:var(--pr)}.cc.a2{border-color:var(--ac)}.cc.a3{border-color:#b8e8c8}.cc.a4{border-color:#d8b8e8}
+
+/* ── Page head ── */
+.ph{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--wh);border-bottom:1.5px solid #e0edf5;position:sticky;top:0;z-index:50}
+.bk{background:var(--bg);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;flex-shrink:0}
+.pt{font-size:15px;font-weight:900}
+
+/* ── Filter / search ── */
+.frow{background:var(--wh);user-select:none}
+.frow:last-of-type{border-bottom:1.5px solid #e0edf5}
+.ftabs{display:flex;gap:7px;padding:9px 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ftabs::-webkit-scrollbar{display:none}
+.ftab{flex-shrink:0;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:800;border:2px solid var(--pr);background:var(--wh);color:var(--tx);cursor:pointer;font-family:var(--f);transition:all .18s;white-space:nowrap}
+.ftab.on{background:var(--pr);color:#14405e;border-color:var(--prd)}
+.sw{padding:9px 16px 0}
+.si{width:100%;padding:9px 15px;border-radius:16px;border:2px solid var(--pr);background:var(--wh);font-size:13px;font-family:var(--f);font-weight:700;color:var(--tx);outline:none}
+
+/* ── Cards ── */
+.cw{padding:10px 16px;display:flex;flex-direction:column;gap:9px}
+.card{background:var(--wh);border-radius:var(--r);padding:12px 13px 11px;box-shadow:var(--sh);transition:opacity .2s,transform .2s}
+.card.vs{opacity:.4;transform:scale(.982)}
+.card.wn{border-left:4px solid var(--htd)}
+.tgs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.tg{font-size:9.5px;font-weight:900;padding:2px 8px;border-radius:8px}
+.tg.mg{background:#fef9c3;color:#78350f}
+.tg.wn2{background:#fee2e2;color:#991b1b}
+.tg.et{background:#dcfce7;color:#14532d}
+.tg.ig{background:#fce7f3;color:#9d174d}
+.cnm{font-size:14px;font-weight:900;line-height:1.3}
+.cmt{font-size:10.5px;color:var(--mt);margin-top:3px;font-weight:700;line-height:1.5}
+.cno{font-size:11px;color:#46606f;margin-top:4px;font-weight:700;line-height:1.4}
+.ca{display:flex;gap:7px;margin-top:10px}
+.ab{flex:1;padding:7px 4px;border-radius:10px;border:2px solid #e0edf5;background:var(--wh);font-size:11px;font-weight:900;font-family:var(--f);cursor:pointer;color:var(--mt);transition:all .18s;text-align:center;text-decoration:none}
+.ab.v.on{background:var(--gn);border-color:#6ee7b7;color:var(--gnd)}
+.ab.w.on{background:var(--ht);border-color:#f5b7b1;color:var(--htd)}
+.ab.gm{color:#1f618d;border-color:var(--pr)}
+
+/* ── Mini map per card ── */
+.map-toggle{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;margin-top:8px;padding:6px 10px;border-radius:10px;border:2px solid var(--pr);background:var(--wh);font-size:11px;font-weight:800;font-family:var(--f);cursor:pointer;color:#1f618d;transition:all .18s}
+.map-toggle.open{background:var(--pr);color:#14405e}
+.map-wrap{display:none;margin-top:7px;border-radius:11px;overflow:hidden;border:2px solid #cfe5f2}
+.map-wrap.show{display:block}
+.map-wrap iframe{width:100%;height:160px;border:none;display:block}
+
+/* ── Area map ── */
+.city-map-wrap{position:relative;border-bottom:2.5px solid var(--pr)}
+.city-map-el{width:100%;height:240px}
+.map-legend-row{display:flex;flex-wrap:wrap;gap:5px;padding:7px 14px;background:var(--wh);border-bottom:1.5px solid #e0edf5}
+.mleg{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:800;color:var(--tx)}
+.mleg-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.empty{text-align:center;padding:32px 20px;color:var(--mt)}
+.empty .ei{font-size:36px;margin-bottom:8px}
+.empty p{font-size:13px;font-weight:700}
+
+/* ── Itinerary ── */
+.itin{padding:10px 16px}
+.dcard{background:var(--wh);border-radius:var(--r);margin-bottom:11px;box-shadow:var(--sh);overflow:hidden}
+.dhd{padding:12px 14px 10px;border-bottom:1.5px solid #e8f1f7}
+.ddate{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.5px}
+.dtheme{font-size:14px;font-weight:900;margin-top:2px}
+.dcity{font-size:10.5px;font-weight:700;color:var(--prd);margin-top:1px}
+.tl{padding:11px 14px;display:flex;flex-direction:column}
+.step{display:flex;gap:9px;padding:6px 0;position:relative}
+.step::before{content:'';position:absolute;left:21px;top:27px;bottom:-6px;width:2px;background:#e0edf5;z-index:0}
+.step:last-child::before{display:none}
+.sico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;z-index:1;border:2px solid var(--bg)}
+.sico.transport{background:#dbeafe}.sico.food{background:#fce7f3}.sico.activity{background:#f3e8ff}.sico.hotel{background:#d1fae5}.sico.shopping{background:#fef3c7}
+.sinfo{flex:1;padding-top:4px}
+.stime{font-size:9.5px;font-weight:900;color:var(--mt);margin-bottom:1px}
+.stitle{font-size:12.5px;font-weight:900;line-height:1.3}
+.ssub{font-size:10.5px;color:var(--mt);font-weight:600;margin-top:2px;line-height:1.4}
+.sbk{font-size:9.5px;font-weight:900;color:#fff;background:#1f618d;padding:2px 7px;border-radius:7px;display:inline-block;margin-top:3px}
+.sfx{font-size:9.5px;font-weight:700;color:var(--prd);display:inline-block;margin-top:2px}
+.step.done .stitle{text-decoration:line-through;color:var(--mt)}
+.step-cb{width:17px;height:17px;accent-color:#1f618d;cursor:pointer;flex-shrink:0;margin-top:7px}
+
+/* ── Luggage ── */
+.lp{padding:11px 16px 0}
+.lpr{background:var(--wh);border-radius:var(--r);padding:12px;margin-bottom:11px;box-shadow:var(--sh)}
+.lpr h3{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.pb{background:#e0edf5;border-radius:16px;height:9px;overflow:hidden}
+.pf{background:linear-gradient(90deg,var(--prd),#1f618d);height:100%;border-radius:16px;transition:width .4s}
+.px{font-size:10px;font-weight:900;color:#1f618d;margin-top:4px;text-align:right}
+.lsc{background:var(--wh);border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:var(--sh)}
+.lsc h3{font-size:10px;font-weight:900;color:var(--mt);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ch{display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:10px;border:2px solid #e0edf5;background:var(--bg);cursor:pointer;transition:all .2s}
+.ch.ck{background:var(--gn);border-color:#6ee7b7}
+.ch input{width:15px;height:15px;accent-color:var(--gnd);cursor:pointer;flex-shrink:0}
+.ch label{font-size:11px;font-weight:700;cursor:pointer;line-height:1.3;color:var(--tx)}
+.ch.ck label{color:var(--gnd)}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="hero"><h1>⛩️ 福岡 FUK 之旅<br>6/16 – 6/20</h1><p>天神 · 博多 · 屋台 🍜</p></div>
+  <div class="ic2"><h3>✈️ 航班（HK Express）</h3>
+    <div class="ir"><span class="lb">去程 6/16 (二)</span><span class="vl">UO600 · 07:35 → 12:00<small>HKG → FUK · 福岡機場國際線</small></span></div>
+    <div class="ir"><span class="lb">回程 6/20 (六)</span><span class="vl">UO601 · 12:55 → 15:35<small>FUK → HKG · 晏晝機，最後一日冇行程</small></span></div>
+  </div>
+  <div class="ic2" style="margin-top:9px"><h3>🏨 住宿</h3>
+    <div class="ir"><span class="lb">6/16–6/20</span><span class="vl"><span class="tbc">📝 TBC — 未填</span><small>定咗酒店話我知，填名 + 地址</small></span></div>
+  </div>
+  <div class="ic2" style="margin-top:9px"><h3>📌 實用資訊</h3>
+    <div class="ir"><span class="lb">機場 → 市區</span><span class="vl">國際線 → 免費接駁巴士 → 國內線<small>地下鐵空港線：博多 5 min · 天神 11 min</small></span></div>
+    <div class="ir"><span class="lb">6月天氣</span><span class="vl">梅雨季 ☔ 24–30°C<small>帶遮 + 透氣衫</small></span></div>
+  </div>
+  <div class="cgd">
+    <div class="cc a1" data-goto="tenjin"><span class="ce">🏙️</span><div class="cn">天神・大名</div><div class="cd">食買玩核心區</div></div>
+    <div class="cc a2" data-goto="hakata"><span class="ce">🍜</span><div class="cn">博多・中洲</div><div class="cd">屋台 · 運河城</div></div>
+    <div class="cc a3" data-goto="day"><span class="ce">⛩️</span><div class="cn">近郊</div><div class="cd">太宰府 · 糸島</div></div>
+    <div class="cc a4" data-goto="luggage"><span class="ce">🎒</span><div class="cn">行李清單</div><div class="cd">Checklist</div></div>
+  </div>
+</div>
+
+<!-- ITINERARY -->
+<div id="page-itin" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">📅 行程</span></div>
+  <div class="itin" id="itin-content"></div>
+</div>
+
+<!-- TENJIN -->
+<div id="page-tenjin" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🏙️ 天神・大名</span></div>
+  <div class="city-map-wrap"><div id="map-tenjin" class="city-map-el"></div></div>
+  <div class="map-legend-row" id="leg-tenjin"></div>
+  <div class="frow"><div class="ftabs" id="tabs-tenjin">
+    <button class="ftab" data-cat="mustgo" data-area="tenjin">⭐ MUST GO</button>
+    <button class="ftab" data-cat="food" data-area="tenjin">🍣 食肆</button>
+    <button class="ftab" data-cat="cafe" data-area="tenjin">☕ Cafe甜品</button>
+    <button class="ftab" data-cat="shopping" data-area="tenjin">🛍️ 購物</button>
+    <button class="ftab" data-cat="activity" data-area="tenjin">🎯 體驗</button>
+  </div></div>
+  <div class="sw"><input class="si" id="si-tenjin" placeholder="🔍 搜尋天神・大名..."></div>
+  <div class="cw" id="cards-tenjin"></div>
+</div>
+
+<!-- HAKATA -->
+<div id="page-hakata" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🍜 博多・中洲</span></div>
+  <div class="city-map-wrap"><div id="map-hakata" class="city-map-el"></div></div>
+  <div class="map-legend-row" id="leg-hakata"></div>
+  <div class="frow"><div class="ftabs" id="tabs-hakata">
+    <button class="ftab" data-cat="mustgo" data-area="hakata">⭐ MUST GO</button>
+    <button class="ftab" data-cat="food" data-area="hakata">🍜 食肆</button>
+    <button class="ftab" data-cat="yatai" data-area="hakata">🏮 屋台</button>
+    <button class="ftab" data-cat="shopping" data-area="hakata">🛍️ 購物</button>
+    <button class="ftab" data-cat="activity" data-area="hakata">🎯 體驗</button>
+  </div></div>
+  <div class="sw"><input class="si" id="si-hakata" placeholder="🔍 搜尋博多・中洲..."></div>
+  <div class="cw" id="cards-hakata"></div>
+</div>
+
+<!-- DAY TRIP -->
+<div id="page-day" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">⛩️ 近郊</span></div>
+  <div class="city-map-wrap"><div id="map-day" class="city-map-el"></div></div>
+  <div class="map-legend-row" id="leg-day"></div>
+  <div class="frow"><div class="ftabs" id="tabs-day">
+    <button class="ftab" data-cat="mustgo" data-area="day">⭐ MUST GO</button>
+    <button class="ftab" data-cat="activity" data-area="day">🎯 景點</button>
+    <button class="ftab" data-cat="food" data-area="day">🍜 食肆</button>
+  </div></div>
+  <div class="sw"><input class="si" id="si-day" placeholder="🔍 搜尋近郊..."></div>
+  <div class="cw" id="cards-day"></div>
+</div>
+
+<!-- LUGGAGE -->
+<div id="page-luggage" class="page">
+  <div class="ph"><button class="bk" data-goto="home">←</button><span class="pt">🎒 行李 Checklist</span></div>
+  <div class="lp" id="lug-content"></div>
+</div>
+
+<nav class="bnav">
+  <button class="ntab active" id="nav-home"    data-goto="home">   <span class="ic">🏠</span>首頁</button>
+  <button class="ntab"        id="nav-itin"    data-goto="itin">   <span class="ic">📅</span>行程</button>
+  <button class="ntab"        id="nav-tenjin"  data-goto="tenjin"> <span class="ic">🏙️</span>天神</button>
+  <button class="ntab"        id="nav-hakata"  data-goto="hakata"> <span class="ic">🍜</span>博多</button>
+  <button class="ntab"        id="nav-day"     data-goto="day">    <span class="ic">⛩️</span>近郊</button>
+  <button class="ntab"        id="nav-luggage" data-goto="luggage"><span class="ic">🎒</span>行李</button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DATA  [name, addr, transport, note, tags, subcat, lat, lng]
+// tags: mustgo warn eat igreel  (space-sep)
+// lat/lng = 區域地圖 marker（冇就唔顯示喺大地圖）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const D={
+tenjin:[
+  // ── FOOD ──
+  ['ひょうたん寿司 本店','中央区天神2-10-20 2-4F（Solaria Plaza 北側小巷）','地下鐵 天神站 / 天神南站',
+   '⭐ 福岡必食壽司！⏰ 11:30開店，提早5-10分鐘排隊（遲到隊勁長）｜握壽司 ¥360-480/件｜推介：帆立貝・拖羅・蟹膏忌廉可樂餅・竹筴魚｜有中文menu',
+   'mustgo eat','food',33.5916,130.3989],
+  ['ひょうたんの回転寿司','Solaria Stage B2','天神站直達',
+   '本店隊太長嘅 backup — 同集團迴轉版，出品都高質','','food',33.5910,130.3993],
+  // ── SHOPPING ──
+  ['nanamica FUKUOKA','中央区大名2-1-14','天神站行8分鐘',
+   '⏰ 11:00–19:00｜☎ 092-717-8280｜有齊 nanamica + THE NORTH FACE Purple Label',
+   'mustgo','shopping',33.5896,130.3963],
+  ['大名・今泉 行街','大名一帶','天神站步行',
+   '古著店 / select shop 集中地，nanamica 順路掃埋','','shopping',33.5890,130.3970],
+  // ── IG REEL placeholder ──
+  ['📱 IG Reel 想去（未解碼）','— 待補','—',
+   'instagram.com/reel/DQnv2lSEuWD — 話我知係咩店，幫你補資料入卡',
+   'igreel','food',null,null],
+],
+
+hakata:[
+  ['中洲屋台街','中洲島 那珂川沿岸','地下鐵 中洲川端站',
+   '🏮 傍晚6點後開檔｜拉麵・餃子・燒鳥｜每間細細哋，食一兩款就跳檔','mustgo','yatai',33.5933,130.4060],
+  ['一蘭 総本店','博多区中洲5-3-2','中洲川端站',
+   '一蘭發源地，24小時｜屋台位 backup','','food',33.5938,130.4043],
+  ['キャナルシティ博多','博多区住吉1-2','中洲川端站行10分鐘',
+   '運河城：拉麵競技場 + 商場 + 噴水 show','','shopping',33.5899,130.4115],
+  ['櫛田神社','博多区上川端町1-41','中洲川端站',
+   '博多總鎮守，山笠祭飾山全年展示','','activity',33.5933,130.4108],
+  ['博多駅・KITTE・阪急','博多区博多駅中央街','JR博多站',
+   '手信集中地（明太子・通りもん）｜6/19 掃手信','','shopping',33.5897,130.4207],
+],
+
+day:[
+  ['太宰府天満宮','太宰府市宰府4-7-1','天神 → 西鐵太宰府線 約30分鐘',
+   '學問之神｜參道梅枝餅必食｜星巴克隈研吾概念店','mustgo','activity',33.5211,130.5358],
+  ['糸島半島','糸島市','JR筑肥線 約40分鐘 + 的士/巴士',
+   '海邊 cafe / 白色鳥居 / 夫婦岩｜⚠️ 6月梅雨，睇天氣先去','','activity',33.5560,130.1990],
+],
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LUGGAGE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const LUGGAGE={
+  '🧴 護膚':['洗面巾巾','Cotton pad','Cotton stick','Make up remover（卸妝）','Cleaning（洗面）','Toner','Eye cream（眼霜）','Serum（精華）','Cream（面霜）','Towel（毛巾）','Sunscreen（防曬）'],
+  '💄 化妝':['Foundation（粉底）','Powder（粉餅）','Concealer + Brush（遮瑕 + 掃）','Cheek（胭脂）','Eyeshadow（眼影）','Eyepen + Eyeliner（眼線）','Eyebrow（眉筆）'],
+  '💇 頭髮':['Hair oil（髮油）','Ribbon（絲帶）','Hair assy（髮飾）'],
+  '📦 其他':['Tissue','Wet tissue','遮（梅雨季必帶☔）','Con','Sleep wear（睡衣）','轉插（日本兩腳扁插）','Suica/ICOCA 卡'],
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ITINERARY（框架 — 確認酒店+想去清單後再填細節）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const ITIN=[
+  {id:'d0616',date:'6/16 (周二)',city:'✈️→🏙️ 香港→福岡',theme:'🛬 抵達・天神初探',steps:[
+    {tm:'07:35',tp:'transport',ti:'UO600 起飛',sub:'香港 HKG → 福岡 FUK',bk:true},
+    {tm:'12:00',tp:'transport',ti:'抵達福岡機場',sub:'國際線 → 免費接駁巴士去國內線搭地下鐵（約15分鐘）'},
+    {tm:'13:30',tp:'hotel',ti:'酒店放行李',sub:'📝 酒店未定 — 定咗再填',fx:true},
+    {tm:'下午',tp:'shopping',ti:'天神行街',sub:'天神地下街 / PARCO / 三越',fx:true},
+    {tm:'晚上',tp:'food',ti:'中洲屋台晚餐',sub:'傍晚6點後開檔，拉麵+燒鳥',fx:true},
+  ]},
+  {id:'d0617',date:'6/17 (周三)',city:'🏙️ 天神・大名',theme:'🍣 ひょうたん寿司・大名掃街',steps:[
+    {tm:'11:20',tp:'food',ti:'ひょうたん寿司 本店',sub:'11:30開店，提早5-10分鐘到排隊！Solaria Plaza北側',bk:true},
+    {tm:'下午',tp:'shopping',ti:'nanamica FUKUOKA',sub:'大名2-1-14｜11:00–19:00｜行8分鐘',fx:true},
+    {tm:'下午',tp:'shopping',ti:'大名・今泉 select shop 掃街',sub:'古著 / 小眾品牌集中地',fx:true},
+    {tm:'晚上',tp:'food',ti:'晚餐（未定）',sub:'自由選 → 見清單',fx:true},
+  ]},
+  {id:'d0618',date:'6/18 (周四)',city:'⛩️ 近郊',theme:'⛩️ 太宰府 day trip（候選）',steps:[
+    {tm:'上午',tp:'transport',ti:'西鐵天神 → 太宰府',sub:'約30分鐘｜⚠️ 梅雨季出發前睇天氣',fx:true},
+    {tm:'中午',tp:'activity',ti:'太宰府天満宮 + 參道',sub:'梅枝餅・隈研吾星巴克',fx:true},
+    {tm:'下午',tp:'transport',ti:'返福岡市區',sub:'',fx:true},
+    {tm:'晚上',tp:'food',ti:'晚餐（未定）',sub:'自由選 → 見清單',fx:true},
+  ]},
+  {id:'d0619',date:'6/19 (周五)',city:'🍜 博多',theme:'🛍️ 博多・運河城・手信日',steps:[
+    {tm:'上午',tp:'activity',ti:'櫛田神社',sub:'順路打卡',fx:true},
+    {tm:'中午',tp:'shopping',ti:'キャナルシティ博多',sub:'拉麵競技場午餐 + 商場',fx:true},
+    {tm:'下午',tp:'shopping',ti:'博多駅掃手信',sub:'明太子・博多通りもん｜KITTE / 阪急',fx:true},
+    {tm:'晚上',tp:'food',ti:'最後晚餐（未定）',sub:'自由選 → 見清單',fx:true},
+  ]},
+  {id:'d0620',date:'6/20 (周六)',city:'✈️ 福岡→香港',theme:'🛫 回香港（晏晝機）',steps:[
+    {tm:'09:30',tp:'hotel',ti:'Check-out',sub:'執好行李，唔好遲'},
+    {tm:'10:30',tp:'transport',ti:'地下鐵去機場',sub:'國內線 → 接駁巴士去國際線，預鬆啲'},
+    {tm:'12:55',tp:'transport',ti:'UO601 起飛',sub:'FUK → HKG',bk:true},
+    {tm:'15:35',tp:'transport',ti:'抵達香港 HKG',sub:''},
+  ]},
+];
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// STATE（localStorage namespace = fuk）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let curPage='home';
+let curCats={tenjin:new Set(),hakata:new Set(),day:new Set()};
+let curQ={tenjin:'',hakata:'',day:''};
+let stepDone={};
+
+function lsg(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch{return{}}}
+function lss(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function getV(){return lsg('fukv')}
+function getW(){return lsg('fukw')}
+function togV(n){const s=getV();s[n]=!s[n];lss('fukv',s);renderArea(curPage)}
+function togW(n){const s=getW();s[n]=!s[n];lss('fukw',s);renderArea(curPage)}
+
+const TM={mustgo:'<span class="tg mg">⭐ MUST GO</span>',warn:'<span class="tg wn2">⚠️ 注意</span>',eat:'<span class="tg et">👍 必食</span>',igreel:'<span class="tg ig">📱 IG Reel</span>'};
+function mkTags(tags){return (tags||'').split(' ').filter(Boolean).map(x=>TM[x]||'').join('')}
+function isMustgo(it){return (it[4]||'').includes('mustgo')}
+
+function sortItems(items){
+  const v=getV(),w=getW();
+  return [...items].sort((a,b)=>{
+    const am=isMustgo(a)?1:0,bm=isMustgo(b)?1:0;
+    const av=v[a[0]]?1:0,bv=v[b[0]]?1:0;
+    const aw=w[a[0]]?1:0,bw=w[b[0]]?1:0;
+    return(bm-am)||(bw-aw)||(av-bv);
+  });
+}
+
+function filterItems(items,q,cats){
+  return items.filter(it=>{
+    const[n,,,note,,sc]=it;
+    const qok=!q||n.toLowerCase().includes(q)||(note||'').toLowerCase().includes(q);
+    let cok=true;
+    if(cats.size>0){
+      if(cats.has('mustgo'))cok=isMustgo(it);
+      else cok=cats.has(sc);
+    }
+    return qok&&cok;
+  });
+}
+
+let _ni=0;const NM={};
+function mkCard(it){
+  const[name,addr,tr,note,tags]=it;
+  const v=getV()[name],w=getW()[name];
+  const tH=mkTags(tags);
+  const meta=[];
+  if(addr&&addr!=='—'&&!addr.startsWith('— '))meta.push('📍 '+addr);
+  if(tr&&tr!=='—')meta.push('🚇 '+tr);
+  const i=_ni++;
+  NM[curPage]=NM[curPage]||{};NM[curPage][i]=name;
+  const noMap=!addr||addr==='—'||addr.startsWith('— ');
+  // 升級位：embed map + 直接開 Google Maps app deep link
+  const q=encodeURIComponent(name+' 福岡');
+  const mapSrc=noMap?null:`https://maps.google.com/maps?q=${encodeURIComponent(addr+' 福岡')}&output=embed&z=16&hl=zh-TW`;
+  return`<div class="card${v?' vs':''}${w?' wn':''}" data-ci="${i}">
+    ${tH?`<div class="tgs">${tH}</div>`:''}
+    <div class="cnm">${name}</div>
+    ${meta.length?`<div class="cmt">${meta.join('&nbsp;·&nbsp;')}</div>`:''}
+    ${note?`<div class="cno">${note}</div>`:''}
+    <div class="ca">
+      <button class="ab v${v?' on':''}" data-ac="v" data-ci="${i}">${v?'✅ 去過':'○ 去過'}</button>
+      <button class="ab w${w?' on':''}" data-ac="w" data-ci="${i}">${w?'❤️ 想去':'🤍 想去'}</button>
+      ${noMap?'':`<a class="ab gm" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">🧭 導航</a>`}
+    </div>
+    ${mapSrc?`<button class="map-toggle" data-mt="1">🗺️ 顯示地圖</button><div class="map-wrap"><iframe data-src="${mapSrc}" loading="lazy"></iframe></div>`:''}
+  </div>`;
+}
+
+function renderArea(area){
+  const el=document.getElementById('cards-'+area);if(!el)return;
+  _ni=0;NM[area]={};
+  const f=sortItems(filterItems(D[area],curQ[area],curCats[area]));
+  el.innerHTML=f.length?f.map(mkCard).join(''):`<div class="empty"><div class="ei">🔍</div><p>搵唔到...</p></div>`;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// AREA MAPS (Leaflet)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const CAT_COLOR={food:'#e91e63',cafe:'#8e44ad',shopping:'#f39c12',activity:'#27ae60',yatai:'#e74c3c'};
+const CAT_LABEL={food:'🍣 食肆',cafe:'☕ Cafe',shopping:'🛍️ 購物',activity:'🎯 景點',yatai:'🏮 屋台'};
+const MAPS={};
+function initMap(area){
+  if(MAPS[area])return;
+  const items=D[area].filter(it=>it[6]&&it[7]);
+  if(!items.length)return;
+  const m=L.map('map-'+area,{scrollWheelZoom:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(m);
+  const grp=[];
+  const cats=new Set();
+  items.forEach(it=>{
+    const[name,addr,,,,sc,lat,lng]=it;
+    cats.add(sc);
+    const mk=L.circleMarker([lat,lng],{radius:9,color:'#fff',weight:2,fillColor:CAT_COLOR[sc]||'#3498db',fillOpacity:.95}).addTo(m);
+    mk.bindPopup(`<b>${name}</b><br><small>${addr}</small>`);
+    grp.push([lat,lng]);
+  });
+  m.fitBounds(grp,{padding:[28,28],maxZoom:15});
+  const leg=document.getElementById('leg-'+area);
+  if(leg)leg.innerHTML=[...cats].map(c=>`<span class="mleg"><span class="mleg-dot" style="background:${CAT_COLOR[c]||'#3498db'}"></span>${CAT_LABEL[c]||c}</span>`).join('');
+  MAPS[area]=m;
+  setTimeout(()=>m.invalidateSize(),60);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ITINERARY render
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const SI={transport:'✈️',food:'🍣',activity:'🎯',hotel:'🏨',shopping:'🛍️'};
+function renderItin(){
+  const el=document.getElementById('itin-content');if(!el)return;
+  stepDone=lsg('fukstep');
+  el.innerHTML=ITIN.map(d=>`<div class="dcard">
+    <div class="dhd"><div class="ddate">${d.date}</div><div class="dtheme">${d.theme}</div><div class="dcity">${d.city}</div></div>
+    <div class="tl">${d.steps.map((s,i)=>{
+      const k=d.id+'_'+i,done=stepDone[k];
+      return`<div class="step${done?' done':''}">
+        <input type="checkbox" class="step-cb" data-sk="${k}" ${done?'checked':''}>
+        <div class="sico ${s.tp}">${SI[s.tp]||'📍'}</div>
+        <div class="sinfo"><div class="stime">${s.tm}</div><div class="stitle">${s.ti}</div>
+        ${s.sub?`<div class="ssub">${s.sub}</div>`:''}
+        ${s.bk?'<span class="sbk">已確認</span>':''}${s.fx?'<span class="sfx">⚡ 彈性安排</span>':''}</div>
+      </div>`;}).join('')}</div>
+  </div>`).join('');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LUGGAGE render
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderLug(){
+  const el=document.getElementById('lug-content');if(!el)return;
+  const ck=lsg('fuklug');
+  const total=Object.values(LUGGAGE).flat().length;
+  const done=Object.values(LUGGAGE).flat().filter(x=>ck[x]).length;
+  const pct=total?Math.round(done/total*100):0;
+  el.innerHTML=`<div class="lpr"><h3>📦 執行李進度</h3><div class="pb"><div class="pf" style="width:${pct}%"></div></div><div class="px">${done}/${total} · ${pct}%</div></div>`+
+  Object.entries(LUGGAGE).map(([cat,items])=>`<div class="lsc"><h3>${cat}</h3><div class="cg">${
+    items.map(x=>`<div class="ch${ck[x]?' ck':''}" data-lug="${x}"><input type="checkbox" ${ck[x]?'checked':''} tabindex="-1"><label>${x}</label></div>`).join('')
+  }</div></div>`).join('');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// NAV + EVENTS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function goto(p){
+  curPage=p;
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  const pg=document.getElementById('page-'+p);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.ntab').forEach(e=>e.classList.remove('active'));
+  const nt=document.getElementById('nav-'+p);if(nt)nt.classList.add('active');
+  window.scrollTo(0,0);
+  if(D[p]){renderArea(p);initMap(p);}
+  if(p==='itin')renderItin();
+  if(p==='luggage')renderLug();
+}
+
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-goto]');if(g){goto(g.dataset.goto);return;}
+  const ft=e.target.closest('.ftab');
+  if(ft){
+    const a=ft.dataset.area,c=ft.dataset.cat,s=curCats[a];
+    s.has(c)?s.delete(c):(s.clear(),s.add(c));   // 單選 toggle，再撳取消
+    document.querySelectorAll(`#tabs-${a} .ftab`).forEach(b=>b.classList.toggle('on',s.has(b.dataset.cat)));
+    renderArea(a);return;
+  }
+  const ab=e.target.closest('.ab[data-ac]');
+  if(ab){
+    const name=NM[curPage][ab.dataset.ci];
+    ab.dataset.ac==='v'?togV(name):togW(name);return;
+  }
+  const mt=e.target.closest('.map-toggle');
+  if(mt){
+    const w=mt.nextElementSibling,f=w.querySelector('iframe');
+    if(f.dataset.src&&!f.src)f.src=f.dataset.src;   // lazy load embed
+    const open=w.classList.toggle('show');
+    mt.classList.toggle('open',open);
+    mt.textContent=open?'🗺️ 收起地圖':'🗺️ 顯示地圖';return;
+  }
+  const ch=e.target.closest('.ch[data-lug]');
+  if(ch){
+    const ck=lsg('fuklug');const k=ch.dataset.lug;ck[k]=!ck[k];lss('fuklug',ck);renderLug();return;
+  }
+  const cb=e.target.closest('.step-cb');
+  if(cb){
+    stepDone[cb.dataset.sk]=cb.checked;lss('fukstep',stepDone);renderItin();return;
+  }
+});
+
+['tenjin','hakata','day'].forEach(a=>{
+  const si=document.getElementById('si-'+a);
+  if(si)si.addEventListener('input',()=>{curQ[a]=si.value.trim().toLowerCase();renderArea(a);});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>✈️ Trip Records</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito','Microsoft JhengHei',sans-serif;background:#F4F7FA;color:#27343d;max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:40px}
+.hero{background:linear-gradient(135deg,#9FC9E8,#F2C4CE);padding:34px 20px 26px;text-align:center}
+.hero h1{font-size:22px;font-weight:900;color:#14405e}
+.hero p{font-size:12px;font-weight:700;color:#3d6480;margin-top:5px}
+.list{padding:16px;display:flex;flex-direction:column;gap:12px}
+.trip{display:block;background:#fff;border-radius:16px;padding:16px;text-decoration:none;color:inherit;box-shadow:0 2px 14px rgba(80,130,170,.14);border-left:5px solid var(--c);transition:transform .12s}
+.trip:active{transform:scale(.97)}
+.trip .em{font-size:26px}
+.trip .nm{font-size:16px;font-weight:900;margin-top:4px}
+.trip .dt{font-size:11px;font-weight:700;color:#7d8e9a;margin-top:2px}
+.trip .tg{display:inline-block;font-size:10px;font-weight:900;margin-top:8px;padding:3px 10px;border-radius:10px;background:#eaf4fb;color:#1f618d}
+.foot{text-align:center;font-size:10px;color:#aab8c2;font-weight:700;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="hero"><h1>✈️ Trip Records</h1><p>每次旅行嘅行程 + 清單 + 回憶</p></div>
+<div class="list">
+  <!-- 新 trip 喺最上面加一個 .trip block -->
+  <a class="trip" style="--c:#9FC9E8" href="./2026-06-fuk/">
+    <div class="em">⛩️</div>
+    <div class="nm">福岡 FUK</div>
+    <div class="dt">2026/6/16 – 6/20 · UO600 / UO601</div>
+    <span class="tg">🍣 ひょうたん寿司 · 屋台 · nanamica</span>
+  </a>
+  <a class="trip" style="--c:#F2C4CE" href="./2026-04-mm-taiwan/">
+    <div class="em">🎂</div>
+    <div class="nm">MM 台灣生日旅行</div>
+    <div class="dt">2026/4/30 – 5/5 · 台南 → 台北 → 桃園</div>
+    <span class="tg">🏯 生日 trip · 頑皮世界 · 阪前鐵板燒</span>
+  </a>
+</div>
+<div class="foot">chloepoonnn / trips</div>
+</body>
+</html>

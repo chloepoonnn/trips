@@ -237,6 +237,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
   <div class="frow"><div class="ftabs" id="map-cats">
     <button class="ftab" data-mcat="food">🍣 食肆</button>
     <button class="ftab" data-mcat="cafe">☕ Cafe</button>
+    <button class="ftab" data-mcat="bar">🍸 Bar</button>
     <button class="ftab" data-mcat="yatai">🏮 屋台</button>
     <button class="ftab" data-mcat="shopping">🛍️ 購物</button>
     <button class="ftab" data-mcat="activity">🎯 景點</button>
@@ -264,6 +265,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
   <div class="frow"><div class="ftabs" id="tabs-tenjin">
     <button class="ftab" data-cat="food" data-area="tenjin">🍣 食肆</button>
     <button class="ftab" data-cat="cafe" data-area="tenjin">☕ Cafe甜品</button>
+    <button class="ftab" data-cat="bar" data-area="tenjin">🍸 Bar</button>
     <button class="ftab" data-cat="shopping" data-area="tenjin">🛍️ 購物</button>
     <button class="ftab" data-cat="activity" data-area="tenjin">🎯 體驗</button>
   </div></div>
@@ -279,6 +281,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--tx);max-width:480px;m
   <div class="frow"><div class="ftabs" id="tabs-hakata">
     <button class="ftab" data-cat="food" data-area="hakata">🍜 食肆</button>
     <button class="ftab" data-cat="yatai" data-area="hakata">🏮 屋台</button>
+    <button class="ftab" data-cat="cafe" data-area="hakata">☕ Cafe</button>
     <button class="ftab" data-cat="shopping" data-area="hakata">🛍️ 購物</button>
     <button class="ftab" data-cat="activity" data-area="hakata">🎯 體驗</button>
   </div></div>
@@ -336,6 +339,26 @@ tenjin:[
    'mustgo eat','food',33.5916,130.3989],
   ['ひょうたんの回転寿司','Solaria Stage B2','天神站直達',
    '本店隊太長嘅 backup — 同集團迴轉版，出品都高質','','food',33.5910,130.3993],
+  ['麺や兼虎（天神西通り店）','中央区大名1-14-45','酒店行2分鐘',
+   '⏰ 10:00–22:00｜濃厚つけ麺名店，豚骨×魚介沾汁｜渡辺通仲有間天神本店','','food',33.5897,130.3960],
+  ['マグロとご飯 黒田飯（福岡本店）','中央区大名1-1-23 1F','赤坂站行8分鐘 / 酒店行5分鐘',
+   '⏰ 11:00–20:30 不定休｜對馬產本鮪海鮮丼，鮪魚批發商直營｜午市大排長龍，避開12-13點','','food',33.5876,130.3985],
+  ['Agito Hirao','中央区平尾2-15-1','西鐵平尾站行3分鐘',
+   '炭火燒肉bar｜九州黑毛和牛 + 創作菜（海膽肉卷・西冷茶泡飯）｜建議訂位','','food',33.5754,130.4072],
+  ['西新初喜 本店','早良区西新5-6-30 初喜ビル2F','地下鐵西新站行5分鐘',
+   '⏰ 午12:00–15:30 / 晚17:00–23:00 🚫週二｜和牛しゃぶしゃぶ・壽喜燒，樓下就係自家肉舖｜☎ 092-833-5330','','food',33.5827,130.3590],
+  // ── CAFE / BAKERY ──
+  ['dacō 福岡','中央区今泉2-5-23 1F','天神站行5分鐘 / 酒店行6分鐘',
+   '⏰ 11:00–19:00 🚫週一｜I\'m donut? × AMAM DACOTAN 聯名 bakery cafe，40款迷你麵包即場翻焗','','cafe',33.5872,130.3962],
+  ['PAIN STOCK 天神店','中央区西中洲6-17','天神中央公園東側，行5分鐘',
+   '⏰ 8:00–19:00 售完即止 🚫週一｜福岡No.1麵包店 × COFFEE COUNTY 咖啡｜明太法包必買','','cafe',33.5901,130.4045],
+  ['REC COFFEE 薬院駅前店','中央区白金1-1-26','西鐵/地下鐵薬院站行3分鐘',
+   '⏰ 平日8:00–25:00｜福岡 specialty coffee 代表，世界拉花亞軍 barista','','cafe',33.5808,130.4046],
+  // ── BAR ──
+  ['万 yorozu','中央区赤坂2-3-32 赤坂MOKUZO 1F','地下鐵赤坂站行6分鐘',
+   '⏰ 15:00–27:00 🚫週日｜茶×酒概念bar：日本茶調酒、薬草茶、季節生菓子｜木造老屋 counter 11席','','bar',33.5855,130.3915],
+  ['Notime Mixology Bar','中央区渡辺通5-13-21 2F','天神南站行5分鐘',
+   '創意 mixology 調酒｜IG搵 @notime 睇最新 menu','','bar',33.5876,130.4008],
   // ── SHOPPING ──
   ['nanamica FUKUOKA','中央区大名2-1-14','天神站行8分鐘',
    '⏰ 11:00–19:00｜☎ 092-717-8280｜有齊 nanamica + THE NORTH FACE Purple Label',
@@ -359,6 +382,14 @@ hakata:[
    '博多總鎮守，山笠祭飾山全年展示','','activity',33.5933,130.4108],
   ['博多駅・KITTE・阪急','博多区博多駅中央街','JR博多站',
    '手信集中地（明太子・通りもん）｜6/19 掃手信','','shopping',33.5897,130.4207],
+  ['みどり MILK STAND','博多駅中央街2-1 博多巴士總站1F','博多站直達',
+   '⏰ 8:00–19:00｜みどり牛乳工場直送 soft cream，2026年6月新開幕，啱啱熱炒緊','','cafe',33.5905,130.4196],
+  ['豆香洞コーヒー 博多リバレイン店','博多区下川端町3-1 リバレインモールB2F','中洲川端站直達',
+   '⏰ 10:00–19:00｜世界焙煎冠軍豆香洞，本店喺大野城唔使專登去','','cafe',33.5950,130.4095],
+  ['THE FULL FULL HAKATA','博多区祇園町11','祇園站 / 運河城行3分鐘',
+   '明太法包始祖級麵包店，有 eat-in + 咖啡｜同運河城/櫛田神社順路','','cafe',33.5928,130.4135],
+  ['にく屋 肉いち 博多店','博多区博多駅南1-2-18 エムビル1F','博多站行7分鐘',
+   '九州黑毛和牛七輪炭火燒肉，逐件靚肉入貨｜☎ 092-472-1129 建議訂位','','food',33.5852,130.4225],
 ],
 
 day:[
@@ -366,6 +397,10 @@ day:[
    '學問之神｜參道梅枝餅必食｜星巴克隈研吾概念店','mustgo','activity',33.5211,130.5358],
   ['糸島半島','糸島市','JR筑肥線 約40分鐘 + 的士/巴士',
    '海邊 cafe / 白色鳥居 / 夫婦岩｜⚠️ 6月梅雨，睇天氣先去','','activity',33.5560,130.1990],
+  ['和牛めんたい 神楽','太宰府天満宮參道','西鐵太宰府站行2分鐘',
+   '⏰ 10:00–17:00｜和牛明太御膳，去太宰府嗰日順路食晏','','food',33.5190,130.5330],
+  ['nakamuLab. 御忍び麺処','那珂川市別所1067-8','要揸車/的士（市區出發約30分鐘）',
+   '⚠️ 完全預約制（IG @nakamulab.nakagawa DM，回覆要2-3日）｜一軒家8席，招牌純白鶏白湯soba｜今次想去要即刻book','','food',33.4750,130.4230],
 ],
 };
 
@@ -518,8 +553,8 @@ function renderArea(area){
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // MAPS — CARTO Voyager tiles + emoji markers
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const CAT_EMOJI={food:'🍣',cafe:'☕',shopping:'🛍️',activity:'🎯',yatai:'🏮'};
-const CAT_LABEL={food:'🍣 食肆',cafe:'☕ Cafe',shopping:'🛍️ 購物',activity:'🎯 景點',yatai:'🏮 屋台'};
+const CAT_EMOJI={food:'🍣',cafe:'☕',shopping:'🛍️',activity:'🎯',yatai:'🏮',bar:'🍸'};
+const CAT_LABEL={food:'🍣 食肆',cafe:'☕ Cafe',shopping:'🛍️ 購物',activity:'🎯 景點',yatai:'🏮 屋台',bar:'🍸 Bar'};
 function tiles(){return L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO',maxZoom:19})}
 
 function mkIcon(it){
@@ -699,7 +734,7 @@ async function loadFX(){
 
 // ── 自己加 spot form ──
 const AREA_NAME={tenjin:'天神・大名',hakata:'博多・中洲',day:'近郊'};
-const AREA_CATS={tenjin:['food','cafe','shopping','activity'],hakata:['food','yatai','shopping','activity'],day:['activity','food']};
+const AREA_CATS={tenjin:['food','cafe','bar','shopping','activity'],hakata:['food','yatai','cafe','shopping','activity'],day:['activity','food']};
 function openAddSheet(area){
   sheetName=null;
   document.getElementById('sheet-body').innerHTML=`<div class="af"><div class="cnm">➕ 自己加（${AREA_NAME[area]}）</div>
